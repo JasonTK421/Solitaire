@@ -4,6 +4,8 @@ $font-display: "Raleway", sans-serif;
 
 // COLOR VARIABLES
 $color-primary: #354ed8;
+$color-black: #131313;
+$color-white: #fbfbfb;
 
 *,
 *::before,
@@ -20,11 +22,13 @@ html {
 
 .body {
   font-family: $font-primary;
-  color: #fbfbfb;
+  color: $color-white;
   font-size: 2.5rem;
   font-weight: 300;
-
-  background-color: #354ed8;
+  background-color: $color-black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .heading-1 {

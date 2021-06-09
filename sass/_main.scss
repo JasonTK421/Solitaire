@@ -1,0 +1,28 @@
+.main {
+  background-color: $color-primary;
+  min-width: 1280px;
+
+  &__nav {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__score {
+    flex: 2;
+    display: flex;
+    align-items: center;
+
+    &-num {
+      font-size: 4rem;
+      padding-left: 1rem;
+    }
+  }
+
+  &__timer {
+    flex: 1;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
