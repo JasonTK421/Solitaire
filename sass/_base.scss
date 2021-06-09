@@ -1,0 +1,36 @@
+// FONT VARIABLES
+$font-primary: "Open+Sans", sans-serif;
+$font-display: "Raleway", sans-serif;
+
+// COLOR VARIABLES
+$color-primary: #354ed8;
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%; // 1 rem = 10px
+}
+
+.body {
+  font-family: $font-primary;
+  color: #fbfbfb;
+  font-size: 2.5rem;
+  font-weight: 300;
+
+  background-color: #354ed8;
+}
+
+.heading-1 {
+  font-family: $font-display;
+  font-weight: 200;
+  font-size: 10rem;
+}
+.btn {
+}
