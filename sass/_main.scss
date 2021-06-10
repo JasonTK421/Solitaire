@@ -1,9 +1,12 @@
 .main {
   background-color: $color-primary;
-  min-width: 1280px;
+  max-width: 1000px;
+  overflow: hidden;
 
   &__nav {
-    padding: 1rem;
+    background-color: rgba(20, 20, 20, 0.609);
+    padding: 2rem;
+    // box-shadow: 2px 0 10px 3px $color-shadow;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15,7 +18,9 @@
     align-items: center;
 
     &-num {
-      font-size: 4rem;
+      font-family: $font-primary;
+      font-weight: 400;
+      font-size: 6rem;
       padding-left: 1rem;
     }
   }

@@ -1,0 +1,34 @@
+.card {
+  font-family: $font-primary;
+
+  font-weight: 600;
+  color: $color-black;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 2fr 1fr;
+  box-shadow: inset 0px 0px 20px $color-inner-shadow, 2px 3px 10px $color-shadow;
+
+  &__num-1 {
+    align-self: flex-start;
+    text-align: center;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  &__suit {
+    align-self: center;
+    text-align: center;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  &__num-2 {
+    align-self: flex-end;
+    text-align: center;
+    transform: rotate(180deg);
+    grid-column: 3;
+    grid-row: 3;
+  }
+}

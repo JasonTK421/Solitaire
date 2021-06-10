@@ -1,12 +1,3 @@
-// FONT VARIABLES
-$font-primary: "Open+Sans", sans-serif;
-$font-display: "Raleway", sans-serif;
-
-// COLOR VARIABLES
-$color-primary: #354ed8;
-$color-black: #131313;
-$color-white: #fbfbfb;
-
 *,
 *::before,
 *::after {
@@ -34,7 +25,14 @@ html {
 .heading-1 {
   font-family: $font-display;
   font-weight: 200;
-  font-size: 10rem;
+  font-size: 20rem;
+}
+
+.heading-2 {
+  font-family: $font-display;
+  font-weight: 200;
+  font-size: 6rem;
 }
 .btn {
+  padding: 1px;
 }

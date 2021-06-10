@@ -1,8 +1,9 @@
 .playfield {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(3, 25rem);
-  gap: 1rem;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 2rem 2.1rem 3rem 2.1rem;
 
   &__deck {
     grid-column: 1;
@@ -51,8 +52,10 @@
     grid-column: 7;
     grid-row: 2;
   }
-}
-
-.playfield * {
-  background-color: red;
+  & > div:not(:last-child) {
+    border: 0.4rem solid #c5c5c5b6;
+    border-radius: 0.5rem;
+    width: $card-width;
+    height: $card-width * 1.4;
+  }
 }
