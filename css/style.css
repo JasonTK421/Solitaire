@@ -43,19 +43,11 @@ html {
   font-size: 6rem;
 }
 
-.heading-3 {
-  font-family: "Raleway", sans-serif;
-  font-weight: 500;
-  font-size: 2.5rem;
-}
-
 .btn {
   padding: 1px;
 }
 
 .card {
-  font-family: "Open Sans", sans-serif;
-  font-weight: 600;
   width: 12.4rem;
   height: 17.36rem;
   color: red;
@@ -63,17 +55,20 @@ html {
   border-radius: 0.5rem;
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 2fr 1fr;
-      grid-template-columns: 1fr 2fr 1fr;
-  -ms-grid-rows: auto 0.5fr 2fr 0.5fr auto;
-      grid-template-rows: auto 0.5fr 2fr 0.5fr auto;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+  -ms-grid-rows: 1fr 3fr;
+      grid-template-rows: 1fr 3fr;
   -webkit-box-shadow: inset 0px 0px 20px rgba(155, 155, 155, 0.75), 2px 3px 10px rgba(19, 19, 19, 0.75);
           box-shadow: inset 0px 0px 20px rgba(155, 155, 155, 0.75), 2px 3px 10px rgba(19, 19, 19, 0.75);
 }
 
 .card__num--1 {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
   color: #d30808;
-  text-align: center;
+  padding-left: 1rem;
   -ms-grid-column: 1;
   grid-column: 1;
   -ms-grid-row: 1;
@@ -81,59 +76,35 @@ html {
 }
 
 .card__icons--1 {
-  fill: #d30808;
-  -ms-flex-item-align: start;
-      align-self: flex-start;
-  -ms-grid-column-align: center;
-      justify-self: center;
-  width: 2rem;
-  height: 2rem;
-  -ms-grid-column: 1;
-  grid-column: 1;
-  -ms-grid-row: 2;
-  grid-row: 2;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  -ms-grid-column-align: right;
+      justify-self: right;
+  width: 3.6rem;
+  padding-right: 0.7rem;
+  -ms-grid-column: 2;
+  grid-column: 2;
+  -ms-grid-row: 1;
+  grid-row: 1;
 }
 
 .card__suit {
-  fill: #d30808;
-  width: 7rem;
-  height: 7rem;
+  width: 9rem;
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center;
   -ms-grid-column-align: center;
       justify-self: center;
-  -ms-grid-column: 2;
-  grid-column: 2;
-  -ms-grid-row: 3;
-  grid-row: 3;
+  grid-column: 1 / -1;
+  -ms-grid-row: 2;
+  grid-row: 2;
 }
 
-.card__icons--2 {
-  fill: #d30808;
-  -ms-flex-item-align: end;
-      align-self: flex-end;
-  -ms-grid-column-align: center;
-      justify-self: center;
-  width: 2rem;
-  height: 2rem;
-  -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
-  -ms-grid-column: 3;
-  grid-column: 3;
-  -ms-grid-row: 4;
-  grid-row: 4;
-}
-
-.card__num--2 {
-  color: #d30808;
-  text-align: center;
-  -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
-  -ms-grid-column: 3;
-  grid-column: 3;
-  -ms-grid-row: 5;
-  grid-row: 5;
+.heading-3 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 2.8rem;
 }
 
 .header {
