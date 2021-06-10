@@ -1,34 +1,59 @@
 .card {
   font-family: $font-primary;
-
   font-weight: 600;
-  color: $color-black;
+  width: $card-width;
+  height: $card-width * 1.4;
+  color: red;
   background-color: $color-white;
   border-radius: 0.5rem;
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  grid-template-rows: 1fr 2fr 1fr;
+  grid-template-rows: auto 0.5fr 2fr 0.5fr auto;
   box-shadow: inset 0px 0px 20px $color-inner-shadow, 2px 3px 10px $color-shadow;
 
-  &__num-1 {
-    align-self: flex-start;
+  &__num--1 {
+    color: $color-suit-red;
     text-align: center;
     grid-column: 1;
     grid-row: 1;
   }
 
-  &__suit {
-    align-self: center;
-    text-align: center;
-    grid-column: 2;
+  &__icons--1 {
+    fill: $color-suit-red;
+    align-self: flex-start;
+    justify-self: center;
+    width: 2rem;
+    height: 2rem;
+    grid-column: 1;
     grid-row: 2;
   }
 
-  &__num-2 {
+  &__suit {
+    fill: $color-suit-red;
+    width: 7rem;
+    height: 7rem;
+    align-self: center;
+    justify-self: center;
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  &__icons--2 {
+    fill: $color-suit-red;
     align-self: flex-end;
+    justify-self: center;
+    width: 2rem;
+    height: 2rem;
+    transform: rotate(180deg);
+    grid-column: 3;
+    grid-row: 4;
+  }
+
+  &__num--2 {
+    color: $color-suit-red;
     text-align: center;
     transform: rotate(180deg);
     grid-column: 3;
-    grid-row: 3;
+    grid-row: 5;
   }
 }

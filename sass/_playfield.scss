@@ -55,7 +55,5 @@
   & > div:not(:last-child) {
     border: 0.4rem solid #c5c5c5b6;
     border-radius: 0.5rem;
-    width: $card-width;
-    height: $card-width * 1.4;
   }
 }
