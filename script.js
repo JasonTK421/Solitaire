@@ -34,6 +34,7 @@ function deck() {
 }
 
 const myDeck = new deck();
+console.log(myDeck);
 
 function displayCard(card) {
   let color = 'red';
