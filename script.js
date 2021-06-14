@@ -36,7 +36,7 @@ function deck() {
 const myDeck = new deck();
 console.log(myDeck);
 
-function displayCard(card) {
+function createCard(card) {
   let color = 'red';
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
@@ -51,10 +51,27 @@ function displayCard(card) {
 function displayDeck(deck) {
   const playField = document.getElementById('playfield');
   deck.forEach(card => {
-    playField.appendChild(displayCard(card));
+    playField.appendChild(createCard(card));
   });
 }
-displayDeck(myDeck);
+
+function shuffelDeck(deck) {
+  const deckCopy = deck;
+  let shuffledDeck = [];
+  const loopNum = deck.length;
+  for (let i = 0; i < loopNum; i++) {
+    const randomCard = Math.floor(Math.random() * deckCopy.length);
+    console.log(`Card num: ${i}`, randomCard);
+    shuffledDeck.push(deckCopy[randomCard]);
+    deckCopy.splice(randomCard, 1);
+    console.log(`Shuffled deck: `, shuffledDeck);
+    console.log(`Deck copy: `, deckCopy);
+  }
+  return shuffledDeck;
+}
+
+displayDeck(shuffelDeck(myDeck));
+
 // const playField = document.getElementById('playfield');
 // playField.appendChild(displayCard(myDeck[0]));
 // playField.appendChild(displayCard(myDeck[1]));
