@@ -36,22 +36,33 @@ function deck() {
 const myDeck = new deck();
 console.log(myDeck);
 
-function createCard(card) {
+function createHTMLCard(card) {
   let color = 'red';
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
   const div = document.createElement('div');
   div.className = 'card';
-  div.innerHTML += `<h3 class="heading-3 card__num ${color}">${card.name}</h3>
-  <img class="card__icon" src="images/icon-${card.suit}.svg" alt="${card.suit}" />
-  <img class="card__suit" src="images/icon-${card.suit}.svg" alt="${card.suit}" />`;
+  div.innerHTML += `<div class="card__side card__side--front">
+  <h3 class="heading-3 card__side--front-num ${color}">${card.name}</h3>
+  <img
+    class="card__side--front-icon"
+    src="images/icon-${card.suit}.svg"
+    alt="${card.suit}"
+  />
+  <img
+    class="card__side--front-suit"
+    src="images/icon-${card.suit}.svg"
+    alt="${card.suit}"
+  />
+</div>
+<div class="card__side card__side--back"></div>`;
   return div;
 }
 
 function displayDeck(deck) {
   const playField = document.getElementById('playfield');
   deck.forEach(card => {
-    playField.appendChild(createCard(card));
+    playField.appendChild(createHTMLCard(card));
   });
 }
 
