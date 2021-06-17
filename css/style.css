@@ -54,8 +54,6 @@ html {
 
 .card__side {
   position: absolute;
-  -webkit-transition: all 0.8s ease;
-  transition: all 0.8s ease;
   width: inherit;
   height: inherit;
   border-radius: 0.5rem;
@@ -118,16 +116,6 @@ html {
   border: 0.3rem solid #fbfbfb;
   -webkit-transform: rotateY(180deg);
           transform: rotateY(180deg);
-}
-
-.card:active .card__side--front {
-  -webkit-transform: rotateY(-180deg);
-          transform: rotateY(-180deg);
-}
-
-.card:active .card__side--back {
-  -webkit-transform: rotateY(0deg);
-          transform: rotateY(0deg);
 }
 
 .red {
@@ -221,95 +209,97 @@ html {
 }
 
 .playfield__location {
+  width: 12.4rem;
+  height: 17.36rem;
   border: 0.4rem solid #c5c5c5b6;
   border-radius: 0.5rem;
 }
 
-.deck {
+.playfield__location--hand {
   -ms-grid-column: 1;
   grid-column: 1;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.discard {
+.playfield__location--waste {
   -ms-grid-column: 2;
   grid-column: 2;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.foundation--1 {
+.playfield__location--foundation-1 {
   -ms-grid-column: 4;
   grid-column: 4;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.foundation--2 {
+.playfield__location--foundation-2 {
   -ms-grid-column: 5;
   grid-column: 5;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.foundation--3 {
+.playfield__location--foundation-3 {
   -ms-grid-column: 6;
   grid-column: 6;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.foundation--4 {
+.playfield__location--foundation-4 {
   -ms-grid-column: 7;
   grid-column: 7;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.pile--1 {
+.playfield__location--table-1 {
   -ms-grid-column: 1;
   grid-column: 1;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.pile--2 {
+.playfield__location--table-2 {
   -ms-grid-column: 2;
   grid-column: 2;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.pile--3 {
+.playfield__location--table-3 {
   -ms-grid-column: 3;
   grid-column: 3;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.pile--4 {
+.playfield__location--table-4 {
   -ms-grid-column: 4;
   grid-column: 4;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.pile--5 {
+.playfield__location--table-5 {
   -ms-grid-column: 5;
   grid-column: 5;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.pile--6 {
+.playfield__location--table-6 {
   -ms-grid-column: 6;
   grid-column: 6;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.pile--7 {
+.playfield__location--table-7 {
   -ms-grid-column: 7;
   grid-column: 7;
   -ms-grid-row: 2;

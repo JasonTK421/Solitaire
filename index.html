@@ -27,20 +27,48 @@
         </div>
       </div>
       <div class="playfield" id="playfield">
-        <div class="playfield__location deck">DECK</div>
-        <div class="playfield__location discard">DISCARD</div>
-        <div class="playfield__location foundation--1">FOUND</div>
-        <div class="playfield__location foundation--2">FOUND</div>
-        <div class="playfield__location foundation--3">FOUND</div>
-        <div class="playfield__location foundation--4">FOUND</div>
-        <div class="playfield__location pile--1">CARD 1</div>
-        <div class="playfield__location pile--2">CARD 2</div>
-        <div class="playfield__location pile--3">CARD 3</div>
-        <div class="playfield__location pile--4">CARD 4</div>
-        <div class="playfield__location pile--5">CARD 5</div>
-        <div class="playfield__location pile--6">CARD 6</div>
-        <div class="playfield__location pile--7">CARD 7</div>
-        <div class="card">
+        <div
+          class="playfield__location playfield__location--hand"
+          ondragover="onDragOver(event);"
+          ondrop="onDrop(event);"
+        >
+          HAND
+        </div>
+        <div class="playfield__location playfield__location--waste">WASTE</div>
+        <div class="playfield__location playfield__location--foundation-1">
+          FOUND
+        </div>
+        <div class="playfield__location playfield__location--foundation-2">
+          FOUND
+        </div>
+        <div class="playfield__location playfield__location--foundation-3">
+          FOUND
+        </div>
+        <div class="playfield__location playfield__location--foundation-4">
+          FOUND
+        </div>
+        <div class="playfield__location playfield__location--table-1">
+          TABLE 1
+        </div>
+        <div class="playfield__location playfield__location--table-2">
+          TABLE 2
+        </div>
+        <div class="playfield__location playfield__location--table-3">
+          TABLE 3
+        </div>
+        <div class="playfield__location playfield__location--table-4">
+          TABLE 4
+        </div>
+        <div class="playfield__location playfield__location--table-5">
+          TABLE 5
+        </div>
+        <div class="playfield__location playfield__location--table-6">
+          TABLE 6
+        </div>
+        <div class="playfield__location playfield__location--table-7">
+          TABLE 7
+        </div>
+        <!-- <div class="card" id="card0" draggable="true">
           <div class="card__side card__side--front">
             <h3 class="heading-3 card__side--front-num red">10</h3>
             <img
@@ -55,7 +83,7 @@
             />
           </div>
           <div class="card__side card__side--back"></div>
-        </div>
+        </div> -->
       </div>
     </main>
     <script src="script.js"></script>
