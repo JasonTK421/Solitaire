@@ -118,6 +118,10 @@ html {
           transform: rotateY(180deg);
 }
 
+.invisible {
+  display: none;
+}
+
 .red {
   color: #d30808;
 }
@@ -304,5 +308,9 @@ html {
   grid-column: 7;
   -ms-grid-row: 2;
   grid-row: 2;
+}
+
+.hover {
+  border-color: forestgreen;
 }
 /*# sourceMappingURL=style.css.map */

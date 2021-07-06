@@ -88,7 +88,7 @@ function createHTMLCard(card, i) {
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
   const div = document.createElement('div');
-  div.className = `card playfield__location--${card.startingPosition}`;
+  div.className = `card`;
   div.draggable = 'true';
   div.id = `card${i}`;
   div.style.zIndex = `${i + 100}`;
@@ -131,45 +131,48 @@ dealCards(myshuffledDeck);
 // // console.log('Table: ', table);
 displayCards(hand);
 
+let grabbed = null;
 const cards = document.querySelectorAll('.card');
 const empties = document.querySelectorAll('.empty');
 
-for (const card of cards) {
+cards.forEach(card => {
   card.addEventListener('dragstart', dragStart);
   card.addEventListener('dragend', dragEnd);
-}
+});
 
-for (const empty of empties) {
+empties.forEach(empty => {
   empty.addEventListener('dragover', dragOver);
   empty.addEventListener('dragenter', dragEnter);
   empty.addEventListener('dragleave', dragLeave);
   empty.addEventListener('drop', dragDrop);
-}
+});
 
 function dragStart() {
-  console.log('start');
+  this.className += ' grabbed';
+  grabbed = document.querySelector('.grabbed');
+  setTimeout(() => (this.className = ' invisible'), 0);
 }
 
 function dragEnd() {
-  console.log('end');
+  this.className = 'card';
 }
 
 function dragOver(e) {
   e.preventDefault();
-  console.log('over');
 }
 
 function dragEnter(e) {
   e.preventDefault();
-  console.log('enter');
+  this.className += ' hover';
 }
 
 function dragLeave() {
-  console.log('leave');
+  this.classList.remove('hover');
 }
 
 function dragDrop() {
-  console.log('drop');
+  this.classList.remove('hover');
+  this.append(grabbed);
 }
 
 // for (let i = 0; i < table.length; i++) {
