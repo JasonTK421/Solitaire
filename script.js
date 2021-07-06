@@ -4,6 +4,7 @@ function card(value, name, suit) {
   this.value = value;
   this.name = name;
   this.suit = suit;
+  this.startingPosition = 'hand';
 }
 
 function deck() {
@@ -31,41 +32,6 @@ function deck() {
     }
   }
   return cards;
-}
-
-const myDeck = new deck();
-// console.log(myDeck);
-
-function createHTMLCard(card, i) {
-  let color = 'red';
-  if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
-
-  const div = document.createElement('div');
-  div.className = 'card';
-  div.id = `card${i}`;
-  div.style.zIndex = `${i + 100}`;
-  div.innerHTML += `<div class="card__side card__side--front">
-  <h3 class="heading-3 card__side--front-num ${color}">${card.name}</h3>
-  <img
-    class="card__side--front-icon"
-    src="images/icon-${card.suit}.svg"
-    alt="${card.suit}"
-  />
-  <img
-    class="card__side--front-suit"
-    src="images/icon-${card.suit}.svg"
-    alt="${card.suit}"
-  />
-</div>
-<div class="card__side card__side--back"></div>`;
-  return div;
-}
-
-function displayDeck(deck) {
-  const playFieldDeck = document.getElementById('playfield');
-  deck.forEach((card, i) => {
-    playFieldDeck.appendChild(createHTMLCard(card, i));
-  });
 }
 
 function shuffelDeck(deck) {
@@ -103,21 +69,114 @@ let table6 = [];
 let table7 = [];
 const table = [table1, table2, table3, table4, table5, table6, table7];
 
-hand = shuffelDeck(myDeck);
-console.log(hand);
-
-const dealCards = function () {
+function dealCards(myshuffledDeck) {
   for (let i = 0; i < table.length; i++) {
     for (let j = i; j < table.length; j++) {
-      table[j].push(hand.pop());
+      table[j].push(myshuffledDeck.pop());
+      table[j][table[j].length - 1].startingPosition = `table-${j + 1}`;
     }
   }
-};
-dealCards();
-console.log(hand);
-console.log(table);
+  hand = myshuffledDeck;
+}
 
-// const cardToMove = document.getElementById('card1');
+function assignStartingPositions(cards) {
+  cards.forEach((card, i) => {});
+}
+
+function createHTMLCard(card, i) {
+  let color = 'red';
+  if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
+
+  const div = document.createElement('div');
+  div.className = `card playfield__location--${card.startingPosition}`;
+  div.draggable = 'true';
+  div.id = `card${i}`;
+  div.style.zIndex = `${i + 100}`;
+  div.innerHTML += `<div class="card__side card__side--front">
+  <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
+  <img
+    class="card__side--front-icon"
+    draggable="false"
+    src="images/icon-${card.suit}.svg"
+    alt="${card.suit}"
+  />
+  <img
+    class="card__side--front-suit"
+    draggable="false"
+    src="images/icon-${card.suit}.svg"
+    alt="${card.suit}"
+  />
+</div>
+`;
+  return div;
+}
+
+function displayCards(cards) {
+  const playField = document.getElementById('playfield');
+  cards.forEach((card, i) => {
+    playField.appendChild(createHTMLCard(card, i));
+  });
+}
+
+// MAIN PROGRAM
+
+const myDeck = new deck();
+console.log('New deck: ', myDeck);
+
+const myshuffledDeck = shuffelDeck(myDeck);
+console.log('shuffled Deck: ', myshuffledDeck);
+
+dealCards(myshuffledDeck);
+// // console.log('Hand: ', hand);
+// // console.log('Table: ', table);
+displayCards(hand);
+
+const cards = document.querySelectorAll('.card');
+const empties = document.querySelectorAll('.empty');
+
+for (const card of cards) {
+  card.addEventListener('dragstart', dragStart);
+  card.addEventListener('dragend', dragEnd);
+}
+
+for (const empty of empties) {
+  empty.addEventListener('dragover', dragOver);
+  empty.addEventListener('dragenter', dragEnter);
+  empty.addEventListener('dragleave', dragLeave);
+  empty.addEventListener('drop', dragDrop);
+}
+
+function dragStart() {
+  console.log('start');
+}
+
+function dragEnd() {
+  console.log('end');
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  console.log('over');
+}
+
+function dragEnter(e) {
+  e.preventDefault();
+  console.log('enter');
+}
+
+function dragLeave() {
+  console.log('leave');
+}
+
+function dragDrop() {
+  console.log('drop');
+}
+
+// for (let i = 0; i < table.length; i++) {
+//   displayCards(table[i]);
+// }
+
+// const cardToMove = document.getElementById('card51');
 
 // cardToMove.onmousedown = function (event) {
 //   cardToMove.style.position = 'absolute';
