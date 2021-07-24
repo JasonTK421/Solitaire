@@ -5,6 +5,7 @@ function card(value, name, suit) {
   this.name = name;
   this.suit = suit;
   this.location = 'hand';
+  this.HTMLCard;
 }
 
 function deck() {
@@ -85,35 +86,6 @@ function buildPlayFieldLocations() {
   return locations;
 }
 
-function createHTMLCard(card, i) {
-  let color = 'red';
-  if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
-
-  const div = document.createElement('div');
-  div.className = `playfield__location--${card.location} card`;
-  div.draggable = 'true';
-  div.id = `card${i}`;
-  div.style.zIndex = `${i + 100}`;
-  div.innerHTML += `
-  <div class="card__side card__side--back"></div>
-  <div class="card__side card__side--front">
-  <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
-  <img
-    class="card__side--front-icon"
-    draggable="false"
-    src="images/icon-${card.suit}.svg"
-    alt="${card.suit}"
-  />
-  <img
-    class="card__side--front-suit"
-    draggable="false"
-    src="images/icon-${card.suit}.svg"
-    alt="${card.suit}"
-  />
-</div>`;
-  return div;
-}
-
 function dealCards(myshuffledDeck) {
   const table = playFieldLocations.slice(6);
 
@@ -126,11 +98,42 @@ function dealCards(myshuffledDeck) {
   playFieldLocations[0].cards = myshuffledDeck;
 }
 
+function createHTMLCards(cards) {
+  cards.forEach((card, i) => {
+    let color = 'red';
+    if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
+
+    const div = document.createElement('div');
+    div.className = `playfield__location--${card.location} card`;
+    div.draggable = 'true';
+    div.id = `card${i}`;
+    div.style.zIndex = `${i + 100}`;
+    div.innerHTML += `
+      <div class="card__side card__side--back"></div>
+      <div class="card__side card__side--front">
+      <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
+      <img
+        class="card__side--front-icon"
+        draggable="false"
+        src="images/icon-${card.suit}.svg"
+        alt="${card.suit}"
+      />
+      <img
+        class="card__side--front-suit"
+        draggable="false"
+        src="images/icon-${card.suit}.svg"
+        alt="${card.suit}"
+      />
+      </div>`;
+    card.HTMLCard = div;
+  });
+}
+
 function displayCards(cards) {
   const playField = document.getElementById('playfield');
 
-  cards.forEach((card, i) => {
-    playField.appendChild(createHTMLCard(card, i));
+  cards.forEach(card => {
+    playField.appendChild(card.HTMLCard);
   });
 }
 
@@ -141,6 +144,7 @@ const playFieldLocations = new buildPlayFieldLocations();
 dealCards(myshuffledDeck);
 
 playFieldLocations.forEach(location => {
+  createHTMLCards(location.cards);
   displayCards(location.cards);
 });
 
