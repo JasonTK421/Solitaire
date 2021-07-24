@@ -129,6 +129,10 @@ function createHTMLCards(cards) {
   });
 }
 
+function setZIndex(card, i) {
+  card.HTMLCard.style.zIndex = `${i + 101}`;
+}
+
 function displayCards(cards) {
   const playField = document.getElementById('playfield');
 
@@ -145,6 +149,9 @@ dealCards(myshuffledDeck);
 
 playFieldLocations.forEach(location => {
   createHTMLCards(location.cards);
+  location.cards.forEach((card, i) => {
+    setZIndex(card, i);
+  });
   displayCards(location.cards);
 });
 
