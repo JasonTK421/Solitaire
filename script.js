@@ -87,8 +87,6 @@ function buildPlayFieldLocations() {
 }
 
 function dealCards(myshuffledDeck) {
-  const table = playFieldLocations.slice(6);
-
   for (let i = 0; i < table.length; i++) {
     for (let j = i; j < table.length; j++) {
       table[j].cards.push(myshuffledDeck.pop());
@@ -133,6 +131,12 @@ function setZIndex(card, i) {
   card.HTMLCard.style.zIndex = `${i + 101}`;
 }
 
+function setCardPosition(cards) {
+  cards.forEach((card, i) => {
+    card.HTMLCard.style.top = `${i * 2}rem`;
+  });
+}
+
 function displayCards(cards) {
   const playField = document.getElementById('playfield');
 
@@ -144,6 +148,7 @@ function displayCards(cards) {
 // MAIN PROGRAM
 const myshuffledDeck = shuffelDeck(new deck());
 const playFieldLocations = new buildPlayFieldLocations();
+const table = playFieldLocations.slice(6);
 
 dealCards(myshuffledDeck);
 
@@ -152,6 +157,13 @@ playFieldLocations.forEach(location => {
   location.cards.forEach((card, i) => {
     setZIndex(card, i);
   });
+});
+
+table.forEach(location => {
+  setCardPosition(location.cards);
+});
+
+playFieldLocations.forEach(location => {
   displayCards(location.cards);
 });
 

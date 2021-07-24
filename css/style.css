@@ -50,6 +50,7 @@ html {
 .card {
   width: 12.4rem;
   height: 17.36rem;
+  position: relative;
 }
 
 .card__side {
