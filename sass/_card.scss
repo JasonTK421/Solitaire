@@ -13,6 +13,12 @@
       2px 3px 10px $color-shadow;
     backface-visibility: hidden;
 
+    &--back {
+      background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
+      border: 0.3rem solid $color-white;
+      transform: rotateY(180deg);
+    }
+
     &--front {
       background-color: $color-white;
       display: grid;
@@ -42,11 +48,6 @@
         grid-column: 1 / -1;
         grid-row: 2;
       }
-    }
-    &--back {
-      background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
-      border: 0.3rem solid $color-white;
-      transform: rotateY(180deg);
     }
   }
   // &:active &__side--front {

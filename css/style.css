@@ -63,6 +63,14 @@ html {
           backface-visibility: hidden;
 }
 
+.card__side--back {
+  background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
+  background: linear-gradient(to bottom right, maroon, #b47979);
+  border: 0.3rem solid #fbfbfb;
+  -webkit-transform: rotateY(180deg);
+          transform: rotateY(180deg);
+}
+
 .card__side--front {
   background-color: #fbfbfb;
   display: -ms-grid;
@@ -108,14 +116,6 @@ html {
   grid-column: 1 / -1;
   -ms-grid-row: 2;
   grid-row: 2;
-}
-
-.card__side--back {
-  background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
-  background: linear-gradient(to bottom right, maroon, #b47979);
-  border: 0.3rem solid #fbfbfb;
-  -webkit-transform: rotateY(180deg);
-          transform: rotateY(180deg);
 }
 
 .invisible {
@@ -217,6 +217,8 @@ html {
   height: 17.36rem;
   border: 0.4rem solid #c5c5c5b6;
   border-radius: 0.5rem;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .playfield__location--hand {
@@ -233,77 +235,77 @@ html {
   grid-row: 1;
 }
 
-.playfield__location--foundation-1 {
+.playfield__location--foundation1 {
   -ms-grid-column: 4;
   grid-column: 4;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.playfield__location--foundation-2 {
+.playfield__location--foundation2 {
   -ms-grid-column: 5;
   grid-column: 5;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.playfield__location--foundation-3 {
+.playfield__location--foundation3 {
   -ms-grid-column: 6;
   grid-column: 6;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.playfield__location--foundation-4 {
+.playfield__location--foundation4 {
   -ms-grid-column: 7;
   grid-column: 7;
   -ms-grid-row: 1;
   grid-row: 1;
 }
 
-.playfield__location--table-1 {
+.playfield__location--table1 {
   -ms-grid-column: 1;
   grid-column: 1;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.playfield__location--table-2 {
+.playfield__location--table2 {
   -ms-grid-column: 2;
   grid-column: 2;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.playfield__location--table-3 {
+.playfield__location--table3 {
   -ms-grid-column: 3;
   grid-column: 3;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.playfield__location--table-4 {
+.playfield__location--table4 {
   -ms-grid-column: 4;
   grid-column: 4;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.playfield__location--table-5 {
+.playfield__location--table5 {
   -ms-grid-column: 5;
   grid-column: 5;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.playfield__location--table-6 {
+.playfield__location--table6 {
   -ms-grid-column: 6;
   grid-column: 6;
   -ms-grid-row: 2;
   grid-row: 2;
 }
 
-.playfield__location--table-7 {
+.playfield__location--table7 {
   -ms-grid-column: 7;
   grid-column: 7;
   -ms-grid-row: 2;

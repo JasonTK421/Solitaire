@@ -4,7 +4,7 @@ function card(value, name, suit) {
   this.value = value;
   this.name = name;
   this.suit = suit;
-  this.startingPosition = 'hand';
+  this.location = 'hand';
 }
 
 function deck() {
@@ -49,38 +49,40 @@ function shuffelDeck(deck) {
   return shuffledDeck;
 }
 
-// displayDeck(shuffelDeck(myDeck));
-
-///////////////////////////////////////////////////////////////
-// Game function
-
-let hand = [];
-let waste = [];
-let foundation1 = [];
-let foundation2 = [];
-let foundation3 = [];
-let foundation4 = [];
-let table1 = [];
-let table2 = [];
-let table3 = [];
-let table4 = [];
-let table5 = [];
-let table6 = [];
-let table7 = [];
-const table = [table1, table2, table3, table4, table5, table6, table7];
-
-function dealCards(myshuffledDeck) {
-  for (let i = 0; i < table.length; i++) {
-    for (let j = i; j < table.length; j++) {
-      table[j].push(myshuffledDeck.pop());
-      table[j][table[j].length - 1].startingPosition = `table-${j + 1}`;
-    }
-  }
-  hand = myshuffledDeck;
+function playFieldLocation(name, element, cards) {
+  this.name = name;
+  this.element = element;
+  this.cards = cards;
 }
 
-function assignStartingPositions(cards) {
-  cards.forEach((card, i) => {});
+function buildPlayFieldLocations() {
+  this.name = [
+    'hand',
+    'waste',
+    'foundation1',
+    'foundation2',
+    'foundation3',
+    'foundation4',
+    'table1',
+    'table2',
+    'table3',
+    'table4',
+    'table5',
+    'table6',
+    'table7',
+  ];
+  const locations = [];
+
+  for (let i = 0; i < this.name.length; i++) {
+    locations.push(
+      new playFieldLocation(
+        this.name[i],
+        document.getElementById(this.name[i]),
+        []
+      )
+    );
+  }
+  return locations;
 }
 
 function createHTMLCard(card, i) {
@@ -88,11 +90,13 @@ function createHTMLCard(card, i) {
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
   const div = document.createElement('div');
-  div.className = `card`;
+  div.className = `playfield__location--${card.location} card`;
   div.draggable = 'true';
   div.id = `card${i}`;
   div.style.zIndex = `${i + 100}`;
-  div.innerHTML += `<div class="card__side card__side--front">
+  div.innerHTML += `
+  <div class="card__side card__side--back"></div>
+  <div class="card__side card__side--front">
   <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
   <img
     class="card__side--front-icon"
@@ -106,30 +110,39 @@ function createHTMLCard(card, i) {
     src="images/icon-${card.suit}.svg"
     alt="${card.suit}"
   />
-</div>
-`;
+</div>`;
   return div;
+}
+
+function dealCards(myshuffledDeck) {
+  const table = playFieldLocations.slice(6);
+
+  for (let i = 0; i < table.length; i++) {
+    for (let j = i; j < table.length; j++) {
+      table[j].cards.push(myshuffledDeck.pop());
+      table[j].cards[table[j].cards.length - 1].location = `table${j + 1}`;
+    }
+  }
+  playFieldLocations[0].cards = myshuffledDeck;
 }
 
 function displayCards(cards) {
   const playField = document.getElementById('playfield');
+
   cards.forEach((card, i) => {
     playField.appendChild(createHTMLCard(card, i));
   });
 }
 
 // MAIN PROGRAM
-
-const myDeck = new deck();
-console.log('New deck: ', myDeck);
-
-const myshuffledDeck = shuffelDeck(myDeck);
-console.log('shuffled Deck: ', myshuffledDeck);
+const myshuffledDeck = shuffelDeck(new deck());
+const playFieldLocations = new buildPlayFieldLocations();
 
 dealCards(myshuffledDeck);
-// // console.log('Hand: ', hand);
-// // console.log('Table: ', table);
-displayCards(hand);
+
+playFieldLocations.forEach(location => {
+  displayCards(location.cards);
+});
 
 let grabbed = null;
 const cards = document.querySelectorAll('.card');
@@ -150,11 +163,10 @@ empties.forEach(empty => {
 function dragStart() {
   this.className += ' grabbed';
   grabbed = document.querySelector('.grabbed');
-  setTimeout(() => (this.className = ' invisible'), 0);
 }
 
 function dragEnd() {
-  this.className = 'card';
+  this.classList.remove('grabbed');
 }
 
 function dragOver(e) {
@@ -172,51 +184,5 @@ function dragLeave() {
 
 function dragDrop() {
   this.classList.remove('hover');
-  this.append(grabbed);
+  grabbed.className = `playfield__location--${this.id} card`;
 }
-
-// for (let i = 0; i < table.length; i++) {
-//   displayCards(table[i]);
-// }
-
-// const cardToMove = document.getElementById('card51');
-
-// cardToMove.onmousedown = function (event) {
-//   cardToMove.style.position = 'absolute';
-//   cardToMove.style.zIndex = 1000;
-
-//   function moveAt(pageX, pageY) {
-//     cardToMove.style.left = pageX - cardToMove.offsetWidth / 2 + 'px';
-//     cardToMove.style.top = pageY - cardToMove.offsetHeight / 2 + 'px';
-//   }
-//   moveAt(event.pageX, event.pageY);
-
-//   function onMouseMove(event) {
-//     moveAt(event.pageX, event.pageY);
-//   }
-
-//   document.addEventListener('mousemove', onMouseMove);
-
-//   cardToMove.onmouseup = function () {
-//     document.removeEventListener('mousemove', this.onMouseMove);
-//     cardToMove.onmouseup = null;
-//   };
-// };
-
-// cardToMove.ondragstart = function () {
-//   return false;
-// };
-// const playField = document.getElementById('playfield');
-// playField.appendChild(displayCard(myDeck[0]));
-// playField.appendChild(displayCard(myDeck[1]));
-// playField.appendChild(displayCard(myDeck[47]));
-
-// window.onload = function () {
-//   let div = document.createElement('div');
-//   div.className = 'card';
-// };
-// const displayDeck = function (myDeck) {
-//   myDeck.forEach(function (card, i) {
-
-//   });
-// };
