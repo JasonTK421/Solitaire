@@ -47,10 +47,20 @@ html {
   padding: 1px;
 }
 
+.dropable {
+  width: inherit;
+  height: inherit;
+  border-radius: 0.5rem;
+}
+
+.dropable--card {
+  position: absolute;
+}
+
 .card {
   width: 12.4rem;
   height: 17.36rem;
-  position: relative;
+  position: absolute;
 }
 
 .card__side {
@@ -214,18 +224,19 @@ html {
 }
 
 .playfield__handLocation {
+  min-width: 12.4rem;
+  min-height: 17.36rem;
   -webkit-box-shadow: 2px 3px 10px #131313bf;
           box-shadow: 2px 3px 10px #131313bf;
   z-index: 5000;
 }
 
 .playfield__location {
-  width: 12.4rem;
-  height: 17.36rem;
   border: 0.4rem solid #c5c5c5b6;
   border-radius: 0.5rem;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  position: relative;
 }
 
 .playfield__location--hand {

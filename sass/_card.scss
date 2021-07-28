@@ -1,8 +1,8 @@
 .card {
   width: $card-width;
   height: $card-width * 1.4;
-  position: relative;
-  // position: absolute;
+  // position: relative;
+  position: absolute;
 
   &__side {
     position: absolute;

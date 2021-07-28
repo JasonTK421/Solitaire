@@ -6,16 +6,17 @@
   padding: 2rem 2.1rem 3rem 2.1rem;
 
   &__handLocation {
+    min-width: $card-width;
+    min-height: $card-width * 1.4;
     box-shadow: 2px 3px 10px $color-shadow;
     z-index: 5000;
   }
 
   &__location {
-    width: $card-width;
-    height: $card-width * 1.4;
     border: 0.4rem solid #c5c5c5b6;
     border-radius: 0.5rem;
     box-sizing: border-box;
+    position: relative;
 
     &--hand {
       grid-column: 1;
