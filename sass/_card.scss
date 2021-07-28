@@ -10,8 +10,7 @@
     width: inherit;
     height: inherit;
     border-radius: $card-corners;
-    box-shadow: inset 0px 0px 20px $color-inner-shadow,
-      2px 3px 10px $color-shadow;
+    box-shadow: inset 0px 0px 20px $color-inner-shadow;
     backface-visibility: hidden;
 
     &--back {

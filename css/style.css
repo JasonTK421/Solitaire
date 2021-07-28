@@ -58,8 +58,8 @@ html {
   width: inherit;
   height: inherit;
   border-radius: 0.5rem;
-  -webkit-box-shadow: inset 0px 0px 20px #9b9b9bbf, 2px 3px 10px #131313bf;
-          box-shadow: inset 0px 0px 20px #9b9b9bbf, 2px 3px 10px #131313bf;
+  -webkit-box-shadow: inset 0px 0px 20px #9b9b9bbf;
+          box-shadow: inset 0px 0px 20px #9b9b9bbf;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
 }
@@ -211,6 +211,12 @@ html {
       grid-template-rows: repeat(3, 1fr);
   gap: 1.5rem;
   padding: 2rem 2.1rem 3rem 2.1rem;
+}
+
+.playfield__handLocation {
+  -webkit-box-shadow: 2px 3px 10px #131313bf;
+          box-shadow: 2px 3px 10px #131313bf;
+  z-index: 5000;
 }
 
 .playfield__location {

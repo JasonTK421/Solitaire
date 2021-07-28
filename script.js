@@ -1,10 +1,12 @@
 'use strict';
 
-function card(value, name, suit) {
+function card(value, name, suit, cardID) {
   this.value = value;
   this.name = name;
   this.suit = suit;
+  this.cardID = cardID;
   this.location = 'hand';
+  this.zIndex;
   this.HTMLCard;
 }
 
@@ -26,10 +28,11 @@ function deck() {
   ];
   this.suit = ['hearts', 'diamonds', 'spades', 'clubs'];
   const cards = [];
-
+  let cardID = 1;
   for (let i = 0; i < this.suit.length; i++) {
     for (let j = 0; j < this.name.length; j++) {
-      cards.push(new card(j + 1, this.name[j], this.suit[i]));
+      cards.push(new card(j + 1, this.name[j], this.suit[i], cardID));
+      cardID++;
     }
   }
   return cards;
@@ -41,11 +44,8 @@ function shuffelDeck(deck) {
   const loopNum = deck.length;
   for (let i = 0; i < loopNum; i++) {
     const randomCard = Math.floor(Math.random() * deckCopy.length);
-    // console.log(`Card num: ${i}`, randomCard);
     shuffledDeck.push(deckCopy[randomCard]);
     deckCopy.splice(randomCard, 1);
-    // console.log(`Shuffled deck: `, shuffledDeck);
-    // console.log(`Deck copy: `, deckCopy);
   }
   return shuffledDeck;
 }
@@ -72,10 +72,10 @@ function buildPlayFieldLocations() {
     'table6',
     'table7',
   ];
-  const locations = [];
+  const playfieldLocations = [];
 
   for (let i = 0; i < this.name.length; i++) {
-    locations.push(
+    playfieldLocations.push(
       new playFieldLocation(
         this.name[i],
         document.getElementById(this.name[i]),
@@ -83,7 +83,7 @@ function buildPlayFieldLocations() {
       )
     );
   }
-  return locations;
+  return playfieldLocations;
 }
 
 function dealCards(myshuffledDeck) {
@@ -96,17 +96,16 @@ function dealCards(myshuffledDeck) {
   playFieldLocations[0].cards = myshuffledDeck;
 }
 
-function createHTMLCards(cards) {
-  cards.forEach((card, i) => {
-    let color = 'red';
-    if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
+function createHTMLCard(card) {
+  let color = 'red';
+  if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
-    const div = document.createElement('div');
-    div.className = `playfield__location--${card.location} card`;
-    div.draggable = 'true';
-    div.id = `card${i}`;
-    div.style.zIndex = `${i + 100}`;
-    div.innerHTML += `
+  const div = document.createElement('div');
+  div.className = `playfield__location--${card.location} card`;
+  div.draggable = 'true';
+  div.id = card.cardID;
+  div.style.zIndex = card.zIndex;
+  div.innerHTML += `
       <div class="card__side card__side--back"></div>
       <div class="card__side card__side--front">
       <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
@@ -123,12 +122,11 @@ function createHTMLCards(cards) {
         alt="${card.suit}"
       />
       </div>`;
-    card.HTMLCard = div;
-  });
+  card.HTMLCard = div;
 }
 
 function setZIndex(card, i) {
-  card.HTMLCard.style.zIndex = `${i + 101}`;
+  card.zIndex = i + 101;
 }
 
 function setCardPosition(cards) {
@@ -145,17 +143,31 @@ function displayCards(cards) {
   });
 }
 
+function updateCard(card, location) {
+  card.location = location.name;
+  setZIndex(card, location.cards.length + 1);
+}
+
+function updateCardDisplay(card) {
+  const div = document.getElementById(card.cardID);
+  div.className = `playfield__location--${card.location} card`;
+  //position offset
+  div.style.zIndex = card.zIndex;
+}
+
 // MAIN PROGRAM
 const myshuffledDeck = shuffelDeck(new deck());
 const playFieldLocations = new buildPlayFieldLocations();
 const table = playFieldLocations.slice(6);
+const hand = playFieldLocations[0];
+const waste = playFieldLocations[1];
 
 dealCards(myshuffledDeck);
 
 playFieldLocations.forEach(location => {
-  createHTMLCards(location.cards);
   location.cards.forEach((card, i) => {
     setZIndex(card, i);
+    createHTMLCard(card);
   });
 });
 
@@ -169,27 +181,46 @@ playFieldLocations.forEach(location => {
 
 let grabbed = null;
 const cards = document.querySelectorAll('.card');
-const empties = document.querySelectorAll('.empty');
+const cardLocations = document.querySelectorAll('.cardLocation');
 
 cards.forEach(card => {
   card.addEventListener('dragstart', dragStart);
   card.addEventListener('dragend', dragEnd);
 });
 
-empties.forEach(empty => {
-  empty.addEventListener('dragover', dragOver);
-  empty.addEventListener('dragenter', dragEnter);
-  empty.addEventListener('dragleave', dragLeave);
-  empty.addEventListener('drop', dragDrop);
+cardLocations.forEach(cardLocation => {
+  cardLocation.addEventListener('dragover', dragOver);
+  cardLocation.addEventListener('dragenter', dragEnter);
+  cardLocation.addEventListener('dragleave', dragLeave);
+  cardLocation.addEventListener('drop', dragDrop);
+});
+
+hand.element.addEventListener('click', function () {
+  if (hand.cards.length === 0) {
+    const num = waste.cards.length;
+    for (let i = 0; i < num; i++) {
+      const card = waste.cards.pop();
+      updateCard(card, hand);
+      updateCardDisplay(card, hand.cards);
+      hand.cards.push(card);
+    }
+  } else {
+    const card = hand.cards.pop();
+    updateCard(card, waste);
+    updateCardDisplay(card, waste.cards);
+    waste.cards.push(card);
+  }
 });
 
 function dragStart() {
-  this.className += ' grabbed';
+  this.classList.add('grabbed');
   grabbed = document.querySelector('.grabbed');
+  setTimeout(() => this.classList.add('invisible'), 0);
 }
 
 function dragEnd() {
   this.classList.remove('grabbed');
+  this.classList.remove('invisible');
 }
 
 function dragOver(e) {
@@ -198,7 +229,7 @@ function dragOver(e) {
 
 function dragEnter(e) {
   e.preventDefault();
-  this.className += ' hover';
+  this.classList.add('hover');
 }
 
 function dragLeave() {

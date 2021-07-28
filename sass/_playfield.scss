@@ -5,6 +5,11 @@
   gap: 1.5rem;
   padding: 2rem 2.1rem 3rem 2.1rem;
 
+  &__handLocation {
+    box-shadow: 2px 3px 10px $color-shadow;
+    z-index: 5000;
+  }
+
   &__location {
     width: $card-width;
     height: $card-width * 1.4;
