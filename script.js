@@ -5,7 +5,6 @@ function card(value, name, suit, cardID) {
   this.name = name;
   this.suit = suit;
   this.cardID = cardID;
-  // this.location = 'hand';
   this.zIndex;
   this.element;
 }
@@ -50,13 +49,13 @@ function shuffelDeck(deck) {
   return shuffledDeck;
 }
 
-function playFieldLocation(name, element, cards) {
+function cardPile(name, element, cards) {
   this.name = name;
   this.element = element;
   this.cards = cards;
 }
 
-function buildPlayFieldLocations() {
+function buildCardPiles() {
   this.name = [
     'hand',
     'waste',
@@ -72,28 +71,23 @@ function buildPlayFieldLocations() {
     'table6',
     'table7',
   ];
-  const playfieldLocations = [];
+  const cardPiles = [];
 
   for (let i = 0; i < this.name.length; i++) {
-    playfieldLocations.push(
-      new playFieldLocation(
-        this.name[i],
-        document.getElementById(this.name[i]),
-        []
-      )
+    cardPiles.push(
+      new cardPile(this.name[i], document.getElementById(this.name[i]), [])
     );
   }
-  return playfieldLocations;
+  return cardPiles;
 }
 
-function dealCards(myshuffledDeck) {
+function dealCards(myshuffledDeck, pile) {
   for (let i = 0; i < table.length; i++) {
     for (let j = i; j < table.length; j++) {
       table[j].cards.push(myshuffledDeck.pop());
-      // table[j].cards[table[j].cards.length - 1].location = `table${j + 1}`;
     }
   }
-  playFieldLocations[0].cards = myshuffledDeck;
+  pile.cards = myshuffledDeck;
 }
 
 function createCardElement(card) {
@@ -135,34 +129,34 @@ function setCardPosition(cards) {
   });
 }
 
-function displayCards(location) {
-  location.cards.forEach(card => {
-    location.element.appendChild(card.element);
+function displayCards(pile) {
+  pile.cards.forEach(card => {
+    pile.element.appendChild(card.element);
   });
 }
 
 // MAIN PROGRAM
 const myshuffledDeck = shuffelDeck(new deck());
-const playFieldLocations = new buildPlayFieldLocations();
-const table = playFieldLocations.slice(6);
-const hand = playFieldLocations[0];
-const waste = playFieldLocations[1];
+const cardPiles = new buildCardPiles();
+const table = cardPiles.slice(6);
+const drawPile = cardPiles[0];
+const waste = cardPiles[1];
 
-dealCards(myshuffledDeck);
+dealCards(myshuffledDeck, drawPile);
 
-playFieldLocations.forEach(location => {
-  location.cards.forEach((card, i) => {
+cardPiles.forEach(pile => {
+  pile.cards.forEach((card, i) => {
     setZIndex(card, i);
     createCardElement(card);
   });
 });
 
-table.forEach(location => {
-  setCardPosition(location.cards);
+table.forEach(pile => {
+  setCardPosition(pile.cards);
 });
 
-playFieldLocations.forEach(location => {
-  displayCards(location);
+cardPiles.forEach(pile => {
+  displayCards(pile);
 });
 
 let grabbedElement = null;
@@ -183,26 +177,26 @@ dropables.forEach(dropable => {
   dropable.addEventListener('drop', dragDrop);
 });
 
-hand.element.addEventListener('click', cycleCards);
+drawPile.element.addEventListener('click', cycleCards);
 
 function cycleCards() {
-  if (hand.cards.length === 0) {
+  if (drawPile.cards.length === 0) {
     const cardCount = waste.cards.length;
     for (let i = 0; i < cardCount; i++) {
-      hand.cards.push(waste.cards.pop());
-      displayCards(hand);
+      drawPile.cards.push(waste.cards.pop());
+      displayCards(drawPile);
     }
   } else {
-    waste.cards.push(hand.cards.pop());
+    waste.cards.push(drawPile.cards.pop());
     displayCards(waste);
   }
 }
 
 function dragStart() {
   grabbedElement = this;
-  playFieldLocations.forEach(location => {
-    if (location.name === grabbedElement.parentElement.id) {
-      grabbedParent = location;
+  cardPiles.forEach(pile => {
+    if (pile.name === grabbedElement.parentElement.id) {
+      grabbedParent = pile;
     }
   });
   grabbedCard.push(grabbedParent.cards.pop());
@@ -228,10 +222,10 @@ function dragLeave() {
 
 function dragDrop() {
   this.classList.remove('hover');
-  playFieldLocations.forEach(location => {
-    if (location.name === this.id) {
-      location.cards.push(grabbedCard.pop());
-      displayCards(location);
+  cardPiles.forEach(pile => {
+    if (pile.name === this.id) {
+      pile.cards.push(grabbedCard.pop());
+      displayCards(pile);
     }
   });
 }
