@@ -1,16 +1,15 @@
 .card {
   width: $card-width;
   height: $card-width * 1.4;
-  // position: relative;
   position: absolute;
 
   &__side {
-    position: absolute;
     width: inherit;
     height: inherit;
     border-radius: $card-corners;
     box-shadow: inset 0px 0px 20px $color-inner-shadow;
     backface-visibility: hidden;
+    position: absolute;
 
     &--back {
       background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));

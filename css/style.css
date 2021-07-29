@@ -47,16 +47,6 @@ html {
   padding: 1px;
 }
 
-.dropable {
-  width: inherit;
-  height: inherit;
-  border-radius: 0.5rem;
-}
-
-.dropable--card {
-  position: absolute;
-}
-
 .card {
   width: 12.4rem;
   height: 17.36rem;
@@ -64,7 +54,6 @@ html {
 }
 
 .card__side {
-  position: absolute;
   width: inherit;
   height: inherit;
   border-radius: 0.5rem;
@@ -72,6 +61,7 @@ html {
           box-shadow: inset 0px 0px 20px #9b9b9bbf;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
+  position: absolute;
 }
 
 .card__side--back {
@@ -167,7 +157,6 @@ html {
 
 .main {
   background-color: #354ed8;
-  max-width: 1000px;
   overflow: hidden;
 }
 
@@ -220,31 +209,22 @@ html {
 .playfield {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[7];
-      grid-template-columns: repeat(7, 1fr);
-  -ms-grid-rows: (1fr)[3];
-      grid-template-rows: repeat(3, 1fr);
+  -ms-grid-columns: (12.4rem)[7];
+      grid-template-columns: repeat(7, 12.4rem);
+  -ms-grid-rows: (17.36rem)[3];
+      grid-template-rows: repeat(3, 17.36rem);
   gap: 1.5rem;
   padding: 2rem 2.1rem 3rem 2.1rem;
 }
 
-.playfield__drawPile {
-  min-width: 12.4rem;
-  min-height: 17.36rem;
-  -webkit-box-shadow: 2px 3px 10px #131313bf;
-          box-shadow: 2px 3px 10px #131313bf;
-  z-index: 5000;
-}
-
 .playfield__cardPile {
-  border: 0.4rem solid #c5c5c5b6;
   border-radius: 0.5rem;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   position: relative;
 }
 
-.playfield__cardPile--hand {
+.playfield__cardPile--drawPile {
   -ms-grid-column: 1;
   grid-column: 1;
   -ms-grid-row: 1;
@@ -333,6 +313,15 @@ html {
   grid-column: 7;
   -ms-grid-row: 2;
   grid-row: 2;
+}
+
+.emptyPile {
+  border: 0.4rem solid #c5c5c5b6;
+}
+
+.fullPile {
+  -webkit-box-shadow: 2px 3px 10px #131313bf;
+          box-shadow: 2px 3px 10px #131313bf;
 }
 
 .hover {

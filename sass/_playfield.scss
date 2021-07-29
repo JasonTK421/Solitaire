@@ -1,24 +1,16 @@
 .playfield {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(7, $card-width);
+  grid-template-rows: repeat(3, $card-width * 1.4);
   gap: 1.5rem;
   padding: 2rem 2.1rem 3rem 2.1rem;
 
-  &__drawPile {
-    min-width: $card-width;
-    min-height: $card-width * 1.4;
-    box-shadow: 2px 3px 10px $color-shadow;
-    z-index: 5000;
-  }
-
   &__cardPile {
-    border: 0.4rem solid #c5c5c5b6;
     border-radius: 0.5rem;
     box-sizing: border-box;
     position: relative;
 
-    &--hand {
+    &--drawPile {
       grid-column: 1;
       grid-row: 1;
     }
@@ -83,6 +75,14 @@
       grid-row: 2;
     }
   }
+}
+
+.emptyPile {
+  border: 0.4rem solid #c5c5c5b6;
+}
+
+.fullPile {
+  box-shadow: 2px 3px 10px $color-shadow;
 }
 
 .hover {

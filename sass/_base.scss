@@ -37,12 +37,3 @@ html {
 .btn {
   padding: 1px;
 }
-
-.dropable {
-  width: inherit;
-  height: inherit;
-  border-radius: $card-corners;
-  &--card {
-    position: absolute;
-  }
-}

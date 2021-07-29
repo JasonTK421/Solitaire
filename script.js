@@ -80,13 +80,13 @@ function buildCardPiles() {
   return cardPiles;
 }
 
-function dealCards(myshuffledDeck, cardPile) {
+function dealCards(deck, drawPile, table) {
   for (let i = 0; i < table.length; i++) {
     for (let j = i; j < table.length; j++) {
-      table[j].cards.push(myshuffledDeck.pop());
+      table[j].cards.push(deck.pop());
     }
   }
-  cardPile.cards = myshuffledDeck;
+  drawPile.cards = deck;
 }
 
 function createCardElement(card, i) {
@@ -148,6 +148,30 @@ function flipCard(card) {
   return card;
 }
 
+function updateCardPileVisuals(cardPile) {
+  if (cardPile.cards.length === 0) {
+    cardPile.element.classList.add('emptyPile');
+    cardPile.element.classList.remove('fullPile');
+    return;
+  }
+
+  if (cardPile.element.classList.contains('fullPile')) return;
+  else {
+    cardPile.element.classList.add('fullPile');
+    cardPile.element.classList.remove('emptyPile');
+  }
+}
+
+function testCheckAllCardPiles(cardPiles) {
+  console.log(
+    '-------------------------------------------------------------------------'
+  );
+  cardPiles.forEach(pile => {
+    console.log(`Name: ${pile.name} | Lenght: ${pile.cards.length}`);
+    // console.log(`Lenght: ${pile.cards.length}`);
+  });
+}
+
 // MAIN PROGRAM
 const myshuffledDeck = shuffelDeck(new deck());
 const cardPiles = new buildCardPiles();
@@ -155,7 +179,7 @@ const table = cardPiles.slice(6);
 const drawPile = cardPiles[0];
 const waste = cardPiles[1];
 
-dealCards(myshuffledDeck, drawPile);
+dealCards(myshuffledDeck, drawPile, table);
 
 cardPiles.forEach(cardPile => {
   cardPile.cards.forEach((card, i) => {
@@ -171,8 +195,8 @@ cardPiles.forEach(cardPile => {
   displayCards(cardPile);
 });
 
-let grabbedElement = null;
-let grabbedParent = null;
+let originalCardPile = null;
+let targetCardPile = null;
 let grabbedCard = [];
 const cards = document.querySelectorAll('.card');
 const dropables = document.querySelectorAll('.dropable');
@@ -204,21 +228,36 @@ function cycleDrawPile() {
     updateZIndex(waste);
     displayCards(waste);
   }
+  updateCardPileVisuals(drawPile);
+  updateCardPileVisuals(waste);
+
+  // testCheckAllCardPiles(cardPiles);
+}
+
+function switchCardPiles(oldCardPile, newCardPile) {
+  newCardPile.push(oldCardPile.pop());
 }
 
 function dragStart() {
-  grabbedElement = this;
   cardPiles.forEach(cardPile => {
-    if (cardPile.name === grabbedElement.parentElement.id) {
-      grabbedParent = cardPile;
+    if (cardPile.name === this.parentElement.id) {
+      originalCardPile = cardPile;
+      targetCardPile = cardPile;
     }
   });
-  grabbedCard.push(grabbedParent.cards.pop());
+  switchCardPiles(originalCardPile.cards, grabbedCard);
+  updateCardPileVisuals(originalCardPile);
   setTimeout(() => this.classList.add('invisible'), 0);
 }
 
 function dragEnd() {
+  switchCardPiles(grabbedCard, targetCardPile.cards);
+  updateZIndex(targetCardPile);
+  displayCards(targetCardPile);
+  updateCardPileVisuals(targetCardPile);
   this.classList.remove('invisible');
+
+  // testCheckAllCardPiles(cardPiles);
 }
 
 function dragOver(e) {
@@ -227,20 +266,21 @@ function dragOver(e) {
 
 function dragEnter(e) {
   e.preventDefault();
+  cardPiles.forEach(cardPile => {
+    if (cardPile.name === this.id) {
+      targetCardPile = cardPile;
+    }
+  });
   this.classList.add('hover');
 }
 
 function dragLeave() {
+  targetCardPile = originalCardPile;
   this.classList.remove('hover');
 }
 
 function dragDrop() {
   this.classList.remove('hover');
-  cardPiles.forEach(cardPile => {
-    if (cardPile.name === this.id) {
-      cardPile.cards.push(grabbedCard.pop());
-      updateZIndex(cardPile);
-      displayCards(cardPile);
-    }
-  });
+
+  // testCheckAllCardPiles(cardPiles);
 }
