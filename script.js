@@ -100,7 +100,7 @@ function createCardElement(card, i) {
   div.style.zIndex = zIndex(i);
   div.innerHTML += `
       <div class="card__side card__side--back"></div>
-      <div class="card__side card__side--front">
+      <div class="card__side card__side--front faceDown">
       <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
       <img
         class="card__side--front-icon"
@@ -138,6 +138,14 @@ function displayCards(cardPile) {
   cardPile.cards.forEach(card => {
     cardPile.element.appendChild(card.element);
   });
+}
+
+function flipCard(card) {
+  const sides = card.element.children;
+  for (let i = 0; i < sides.length; i++) {
+    sides[i].classList.toggle('faceDown');
+  }
+  return card;
 }
 
 // MAIN PROGRAM
@@ -187,12 +195,12 @@ function cycleDrawPile() {
   if (drawPile.cards.length === 0) {
     const cardCount = waste.cards.length;
     for (let i = 0; i < cardCount; i++) {
-      drawPile.cards.push(waste.cards.pop());
+      drawPile.cards.push(flipCard(waste.cards.pop()));
       updateZIndex(drawPile);
       displayCards(drawPile);
     }
   } else {
-    waste.cards.push(drawPile.cards.pop());
+    waste.cards.push(flipCard(drawPile.cards.pop()));
     updateZIndex(waste);
     displayCards(waste);
   }

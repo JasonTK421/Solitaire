@@ -6,7 +6,6 @@
 
   &__side {
     position: absolute;
-    // transition: all 0.8s ease;
     width: inherit;
     height: inherit;
     border-radius: $card-corners;
@@ -16,7 +15,7 @@
     &--back {
       background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
       border: 0.3rem solid $color-white;
-      transform: rotateY(180deg);
+      z-index: 1;
     }
 
     &--front {
@@ -24,6 +23,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: auto 3fr;
+      z-index: 2;
 
       &-num {
         align-self: center;
@@ -50,32 +50,10 @@
       }
     }
   }
-  // &:active &__side--front {
-  //   transform: rotateY(-180deg);
-  // }
-  // &:active &__side--back {
-  //   transform: rotateY(0deg);
-  // }
+}
 
-  // &__patterns {
-  //   width: 100%;
-  //   height: 100%;
-  //   background: repeating-linear-gradient(
-  //       -55deg,
-  //       transparent,
-  //       transparent 5px,
-  //       rgb(255, 221, 221) 3px,
-  //       rgb(255, 221, 221) 7px
-  //     ),
-  //     repeating-linear-gradient(
-  //       55deg,
-  //       transparent,
-  //       transparent 5px,
-  //       rgb(255, 221, 221) 3px,
-  //       rgb(255, 221, 221) 7px
-  //     );
-  //   z-index: 1000;
-  // }
+.faceDown {
+  transform: rotateY(180deg);
 }
 
 .invisible {

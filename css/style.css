@@ -78,8 +78,7 @@ html {
   background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
   background: linear-gradient(to bottom right, maroon, #b47979);
   border: 0.3rem solid #fbfbfb;
-  -webkit-transform: rotateY(180deg);
-          transform: rotateY(180deg);
+  z-index: 1;
 }
 
 .card__side--front {
@@ -90,6 +89,7 @@ html {
       grid-template-columns: 1fr 1fr;
   -ms-grid-rows: auto 3fr;
       grid-template-rows: auto 3fr;
+  z-index: 2;
 }
 
 .card__side--front-num {
@@ -127,6 +127,11 @@ html {
   grid-column: 1 / -1;
   -ms-grid-row: 2;
   grid-row: 2;
+}
+
+.faceDown {
+  -webkit-transform: rotateY(180deg);
+          transform: rotateY(180deg);
 }
 
 .invisible {
