@@ -57,7 +57,7 @@ function cardPile(name, element, cards) {
 
 function buildCardPiles() {
   this.name = [
-    'hand',
+    'drawPile',
     'waste',
     'foundation1',
     'foundation2',
@@ -90,15 +90,15 @@ function dealCards(myshuffledDeck, pile) {
   pile.cards = myshuffledDeck;
 }
 
-function createCardElement(card) {
+function createCardElement(card, i) {
   let color = 'red';
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
   const div = document.createElement('div');
-  div.className = `dropable card`;
+  div.className = `card`;
   div.draggable = 'true';
   div.id = card.cardID;
-  div.style.zIndex = card.zIndex;
+  div.style.zIndex = i + 100;
   div.innerHTML += `
       <div class="card__side card__side--back"></div>
       <div class="card__side card__side--front">
@@ -119,9 +119,9 @@ function createCardElement(card) {
   card.element = div;
 }
 
-function setZIndex(card, i) {
-  card.zIndex = i + 101;
-}
+// function setZIndex(card, i) {
+//   card.zIndex = i + 101;
+// }
 
 function setCardPosition(cards) {
   cards.forEach((card, i) => {
@@ -146,8 +146,7 @@ dealCards(myshuffledDeck, drawPile);
 
 cardPiles.forEach(pile => {
   pile.cards.forEach((card, i) => {
-    setZIndex(card, i);
-    createCardElement(card);
+    createCardElement(card, i);
   });
 });
 
