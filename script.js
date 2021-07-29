@@ -188,7 +188,7 @@ function cycleDrawPile() {
     const cardCount = waste.cards.length;
     for (let i = 0; i < cardCount; i++) {
       drawPile.cards.push(waste.cards.pop());
-
+      updateZIndex(drawPile);
       displayCards(drawPile);
     }
   } else {
