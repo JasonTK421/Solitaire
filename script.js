@@ -81,13 +81,13 @@ function buildCardPiles() {
   return cardPiles;
 }
 
-function dealCards(myshuffledDeck, pile) {
+function dealCards(myshuffledDeck, cardPile) {
   for (let i = 0; i < table.length; i++) {
     for (let j = i; j < table.length; j++) {
       table[j].cards.push(myshuffledDeck.pop());
     }
   }
-  pile.cards = myshuffledDeck;
+  cardPile.cards = myshuffledDeck;
 }
 
 function createCardElement(card, i) {
@@ -129,9 +129,9 @@ function setCardPosition(cards) {
   });
 }
 
-function displayCards(pile) {
-  pile.cards.forEach(card => {
-    pile.element.appendChild(card.element);
+function displayCards(cardPile) {
+  cardPile.cards.forEach(card => {
+    cardPile.element.appendChild(card.element);
   });
 }
 
@@ -144,18 +144,18 @@ const waste = cardPiles[1];
 
 dealCards(myshuffledDeck, drawPile);
 
-cardPiles.forEach(pile => {
-  pile.cards.forEach((card, i) => {
+cardPiles.forEach(cardPile => {
+  cardPile.cards.forEach((card, i) => {
     createCardElement(card, i);
   });
 });
 
-table.forEach(pile => {
-  setCardPosition(pile.cards);
+table.forEach(cardPile => {
+  setCardPosition(cardPile.cards);
 });
 
-cardPiles.forEach(pile => {
-  displayCards(pile);
+cardPiles.forEach(cardPile => {
+  displayCards(cardPile);
 });
 
 let grabbedElement = null;
@@ -193,9 +193,9 @@ function cycleCards() {
 
 function dragStart() {
   grabbedElement = this;
-  cardPiles.forEach(pile => {
-    if (pile.name === grabbedElement.parentElement.id) {
-      grabbedParent = pile;
+  cardPiles.forEach(cardPile => {
+    if (cardPile.name === grabbedElement.parentElement.id) {
+      grabbedParent = cardPile;
     }
   });
   grabbedCard.push(grabbedParent.cards.pop());
@@ -221,10 +221,10 @@ function dragLeave() {
 
 function dragDrop() {
   this.classList.remove('hover');
-  cardPiles.forEach(pile => {
-    if (pile.name === this.id) {
-      pile.cards.push(grabbedCard.pop());
-      displayCards(pile);
+  cardPiles.forEach(cardPile => {
+    if (cardPile.name === this.id) {
+      cardPile.cards.push(grabbedCard.pop());
+      displayCards(cardPile);
     }
   });
 }
