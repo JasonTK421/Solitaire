@@ -5,7 +5,6 @@ function card(value, name, suit, cardID) {
   this.name = name;
   this.suit = suit;
   this.cardID = cardID;
-  this.zIndex;
   this.element;
 }
 
@@ -98,7 +97,7 @@ function createCardElement(card, i) {
   div.className = `card`;
   div.draggable = 'true';
   div.id = card.cardID;
-  div.style.zIndex = i + 100;
+  div.style.zIndex = zIndex(i);
   div.innerHTML += `
       <div class="card__side card__side--back"></div>
       <div class="card__side card__side--front">
@@ -119,13 +118,19 @@ function createCardElement(card, i) {
   card.element = div;
 }
 
-// function setZIndex(card, i) {
-//   card.zIndex = i + 101;
-// }
-
 function setCardPosition(cards) {
   cards.forEach((card, i) => {
     card.element.style.top = `${i * 2}rem`;
+  });
+}
+
+function zIndex(i) {
+  return (i = i + 101);
+}
+
+function updateZIndex(cardPile) {
+  cardPile.cards.forEach((card, i) => {
+    card.element.style.zIndex = zIndex(i);
   });
 }
 
@@ -176,17 +181,19 @@ dropables.forEach(dropable => {
   dropable.addEventListener('drop', dragDrop);
 });
 
-drawPile.element.addEventListener('click', cycleCards);
+drawPile.element.addEventListener('click', cycleDrawPile);
 
-function cycleCards() {
+function cycleDrawPile() {
   if (drawPile.cards.length === 0) {
     const cardCount = waste.cards.length;
     for (let i = 0; i < cardCount; i++) {
       drawPile.cards.push(waste.cards.pop());
+
       displayCards(drawPile);
     }
   } else {
     waste.cards.push(drawPile.cards.pop());
+    updateZIndex(waste);
     displayCards(waste);
   }
 }
@@ -224,6 +231,7 @@ function dragDrop() {
   cardPiles.forEach(cardPile => {
     if (cardPile.name === this.id) {
       cardPile.cards.push(grabbedCard.pop());
+      updateZIndex(cardPile);
       displayCards(cardPile);
     }
   });
