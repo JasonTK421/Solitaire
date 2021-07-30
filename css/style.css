@@ -62,6 +62,7 @@ html {
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   position: absolute;
+  pointer-events: none;
 }
 
 .card__side--back {
@@ -325,6 +326,7 @@ html {
 }
 
 .hover {
-  border-color: forestgreen;
+  -webkit-box-shadow: 0px 0px 20px #61ff61;
+          box-shadow: 0px 0px 20px #61ff61;
 }
 /*# sourceMappingURL=style.css.map */

@@ -89,13 +89,21 @@ function dealCards(deck, drawPile, table) {
   drawPile.cards = deck;
 }
 
+function toggleDraggable(card) {
+  if (card.element.draggable === false) {
+    card.element.draggable = true;
+  } else {
+    card.element.draggable = false;
+  }
+}
+
 function createCardElement(card, i) {
   let color = 'red';
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
   const div = document.createElement('div');
   div.className = `card`;
-  div.draggable = 'true';
+  div.draggable = true;
   div.id = card.cardID;
   div.style.zIndex = zIndex(i);
   div.innerHTML += `
@@ -187,6 +195,10 @@ cardPiles.forEach(cardPile => {
   });
 });
 
+drawPile.cards.forEach(card => {
+  toggleDraggable(card);
+});
+
 table.forEach(cardPile => {
   setCardPosition(cardPile.cards);
 });
@@ -214,17 +226,22 @@ dropables.forEach(dropable => {
 });
 
 drawPile.element.addEventListener('click', cycleDrawPile);
-
 function cycleDrawPile() {
   if (drawPile.cards.length === 0) {
     const cardCount = waste.cards.length;
     for (let i = 0; i < cardCount; i++) {
-      drawPile.cards.push(flipCard(waste.cards.pop()));
+      const card = waste.cards.pop();
+      flipCard(card);
+      toggleDraggable(card);
+      drawPile.cards.push(card);
       updateZIndex(drawPile);
       displayCards(drawPile);
     }
   } else {
-    waste.cards.push(flipCard(drawPile.cards.pop()));
+    const card = drawPile.cards.pop();
+    flipCard(card);
+    toggleDraggable(card);
+    waste.cards.push(card);
     updateZIndex(waste);
     displayCards(waste);
   }
