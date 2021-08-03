@@ -102,7 +102,7 @@ function createCardElement(card, i) {
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
   const div = document.createElement('div');
-  div.className = `card dropable`;
+  div.className = `card`;
   div.draggable = true;
   div.id = card.cardID;
   div.style.zIndex = zIndex(i);
@@ -136,8 +136,23 @@ function zIndex(i) {
   return (i = i + 101);
 }
 
-function switchCardPiles(oldCardPile, newCardPile) {
-  newCardPile.push(oldCardPile.pop());
+function getIndex(element) {
+  return element.style.zIndex - 101;
+}
+
+function pickUpCards(index, currentCardPile) {
+  const cards = [];
+  for (let i = currentCardPile.length - 1; i >= index; i--) {
+    cards.push(currentCardPile.pop());
+  }
+  return cards;
+}
+
+function dropCards(currentCardPile, newCardPile) {
+  const length = currentCardPile.length;
+  for (let i = 0; i < length; i++) {
+    newCardPile.push(currentCardPile.pop());
+  }
 }
 
 function updateZIndex(cardPile) {
@@ -183,6 +198,7 @@ function testCheckAllCardPiles(cardPiles) {
   );
   cardPiles.forEach(pile => {
     console.log(`Name: ${pile.name} | Lenght: ${pile.cards.length}`);
+    console.log(pile.cards);
     // console.log(`Lenght: ${pile.cards.length}`);
   });
 }
@@ -214,9 +230,9 @@ cardPiles.forEach(cardPile => {
   displayCards(cardPile);
 });
 
-let originalCardPile = null;
+let currentCardPile = null;
 let targetCardPile = null;
-let grabbedCard = [];
+let grabbedCards = [];
 const cards = document.querySelectorAll('.card');
 const dropables = document.querySelectorAll('.dropable');
 
@@ -261,24 +277,25 @@ function cycleDrawPile() {
 function dragStart() {
   cardPiles.forEach(cardPile => {
     if (this.closest(`#${cardPile.name}`)) {
-      originalCardPile = cardPile;
+      currentCardPile = cardPile;
       targetCardPile = cardPile;
     }
   });
 
-  switchCardPiles(originalCardPile.cards, grabbedCard);
-  updateCardPileVisuals(originalCardPile);
+  grabbedCards = pickUpCards(getIndex(this), currentCardPile.cards);
+  updateCardPileVisuals(currentCardPile);
   setTimeout(() => this.classList.add('invisible'), 0);
 }
 
 function dragEnd() {
-  switchCardPiles(grabbedCard, targetCardPile.cards);
+  dropCards(grabbedCards, targetCardPile.cards);
+  // pickUpCards(getIndex(this), grabbedCards, targetCardPile.cards);
   updateZIndex(targetCardPile);
   displayCards(targetCardPile);
   updateCardPileVisuals(targetCardPile);
   this.classList.remove('invisible');
 
-  // testCheckAllCardPiles(cardPiles);
+  testCheckAllCardPiles(cardPiles);
 }
 
 function dragOver(e) {
@@ -296,12 +313,10 @@ function dragEnter(e) {
 }
 
 function dragLeave() {
-  targetCardPile = originalCardPile;
+  targetCardPile = currentCardPile;
   this.classList.remove('hover');
 }
 
 function dragDrop() {
   this.classList.remove('hover');
-
-  // testCheckAllCardPiles(cardPiles);
 }
