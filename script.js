@@ -70,8 +70,8 @@ function buildCardPiles() {
     'table6',
     'table7',
   ];
-  const cardPiles = [];
 
+  const cardPiles = [];
   for (let i = 0; i < this.name.length; i++) {
     cardPiles.push(
       new cardPile(this.name[i], document.getElementById(this.name[i]), [])
@@ -102,7 +102,7 @@ function createCardElement(card, i) {
   if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
   const div = document.createElement('div');
-  div.className = `card`;
+  div.className = `card dropable`;
   div.draggable = true;
   div.id = card.cardID;
   div.style.zIndex = zIndex(i);
@@ -136,6 +136,10 @@ function zIndex(i) {
   return (i = i + 101);
 }
 
+function switchCardPiles(oldCardPile, newCardPile) {
+  newCardPile.push(oldCardPile.pop());
+}
+
 function updateZIndex(cardPile) {
   cardPile.cards.forEach((card, i) => {
     card.element.style.zIndex = zIndex(i);
@@ -143,17 +147,12 @@ function updateZIndex(cardPile) {
 }
 
 function displayCards(cardPile) {
-  cardPile.cards.forEach(card => {
+  cardPile.cards.forEach((card, i) => {
+    // if (i === 0) cardPile.element.appendChild(card.element);
+    // else cardPile.cards[i - 1].element.appendChild(card.element);
+
     cardPile.element.appendChild(card.element);
   });
-}
-
-function flipCard(card) {
-  const sides = card.element.children;
-  for (let i = 0; i < sides.length; i++) {
-    sides[i].classList.toggle('faceDown');
-  }
-  return card;
 }
 
 function updateCardPileVisuals(cardPile) {
@@ -168,6 +167,14 @@ function updateCardPileVisuals(cardPile) {
     cardPile.element.classList.add('fullPile');
     cardPile.element.classList.remove('emptyPile');
   }
+}
+
+function flipCard(card) {
+  const sides = card.element.children;
+  for (let i = 0; i < sides.length; i++) {
+    sides[i].classList.toggle('faceDown');
+  }
+  return card;
 }
 
 function testCheckAllCardPiles(cardPiles) {
@@ -251,17 +258,14 @@ function cycleDrawPile() {
   // testCheckAllCardPiles(cardPiles);
 }
 
-function switchCardPiles(oldCardPile, newCardPile) {
-  newCardPile.push(oldCardPile.pop());
-}
-
 function dragStart() {
   cardPiles.forEach(cardPile => {
-    if (cardPile.name === this.parentElement.id) {
+    if (this.closest(`#${cardPile.name}`)) {
       originalCardPile = cardPile;
       targetCardPile = cardPile;
     }
   });
+
   switchCardPiles(originalCardPile.cards, grabbedCard);
   updateCardPileVisuals(originalCardPile);
   setTimeout(() => this.classList.add('invisible'), 0);
