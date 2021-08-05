@@ -33,6 +33,7 @@ function deck() {
       cardID++;
     }
   }
+  console.log(...cards);
   return cards;
 }
 
@@ -80,12 +81,20 @@ function buildCardPiles() {
   return cardPiles;
 }
 
-function dealCards(deck, drawPile, table) {
-  for (let i = 0; i < table.length; i++) {
-    for (let j = i; j < table.length; j++) {
-      table[j].cards.push(deck.pop());
+function dealCards(deck, drawPile, tablePiles) {
+  for (let i = 0; i < tablePiles.length; i++) {
+    for (let j = i; j < tablePiles.length; j++) {
+      tablePiles[j].cards.push(deck.pop());
     }
   }
+  tablePiles.forEach(pile => {
+    pile.cards.forEach((card, i) => {
+      console.log(card[i]);
+      if (card[i] === pile.cards.length - 1) {
+        flipCard(card);
+      }
+    });
+  });
   drawPile.cards = deck;
 }
 
@@ -97,33 +106,37 @@ function toggleDraggable(card) {
   }
 }
 
-function createCardElement(card, i) {
-  let color = 'red';
-  if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
+function createCardElements(cardPiles) {
+  cardPiles.forEach(cardPile => {
+    cardPile.cards.forEach((card, i) => {
+      let color = 'red';
+      if (card.suit === 'spades' || card.suit === 'clubs') color = 'black';
 
-  const div = document.createElement('div');
-  div.className = `card`;
-  div.draggable = true;
-  div.id = card.cardID;
-  div.style.zIndex = zIndex(i);
-  div.innerHTML += `
-      <div class="card__side card__side--back"></div>
-      <div class="card__side card__side--front faceDown">
-      <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
-      <img
-        class="card__side--front-icon"
-        draggable="false"
-        src="images/icon-${card.suit}.svg"
-        alt="${card.suit}"
-      />
-      <img
-        class="card__side--front-suit"
-        draggable="false"
-        src="images/icon-${card.suit}.svg"
-        alt="${card.suit}"
-      />
-      </div>`;
-  card.element = div;
+      const div = document.createElement('div');
+      div.className = `card`;
+      div.draggable = true;
+      div.id = card.cardID;
+      div.style.zIndex = zIndex(i);
+      div.innerHTML += `
+          <div class="card__side card__side--back"></div>
+          <div class="card__side card__side--front faceDown">
+          <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
+          <img
+            class="card__side--front-icon"
+            draggable="false"
+            src="images/icon-${card.suit}.svg"
+            alt="${card.suit}"
+          />
+          <img
+            class="card__side--front-suit"
+            draggable="false"
+            src="images/icon-${card.suit}.svg"
+            alt="${card.suit}"
+          />
+          </div>`;
+      card.element = div;
+    });
+  });
 }
 
 function setCardPosition(cards) {
@@ -162,10 +175,7 @@ function updateZIndex(cardPile) {
 }
 
 function displayCards(cardPile) {
-  cardPile.cards.forEach((card, i) => {
-    // if (i === 0) cardPile.element.appendChild(card.element);
-    // else cardPile.cards[i - 1].element.appendChild(card.element);
-
+  cardPile.cards.forEach(card => {
     cardPile.element.appendChild(card.element);
   });
 }
@@ -206,23 +216,18 @@ function testCheckAllCardPiles(cardPiles) {
 // MAIN PROGRAM
 const myshuffledDeck = shuffelDeck(new deck());
 const cardPiles = new buildCardPiles();
-const table = cardPiles.slice(6);
+const tablePiles = cardPiles.slice(6);
 const drawPile = cardPiles[0];
 const waste = cardPiles[1];
 
-dealCards(myshuffledDeck, drawPile, table);
-
-cardPiles.forEach(cardPile => {
-  cardPile.cards.forEach((card, i) => {
-    createCardElement(card, i);
-  });
-});
+dealCards(myshuffledDeck, drawPile, tablePiles);
+createCardElements(cardPiles);
 
 drawPile.cards.forEach(card => {
   toggleDraggable(card);
 });
 
-table.forEach(cardPile => {
+tablePiles.forEach(cardPile => {
   setCardPosition(cardPile.cards);
 });
 
