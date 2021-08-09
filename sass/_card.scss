@@ -30,6 +30,7 @@
         padding-left: 0.7rem;
         grid-column: 1;
         grid-row: 1;
+        user-select: none;
       }
 
       &-icon {
@@ -39,6 +40,7 @@
         padding-right: 0.7rem;
         grid-column: 2;
         grid-row: 1;
+        user-select: none;
       }
 
       &-suit {
@@ -47,6 +49,7 @@
         justify-self: center;
         grid-column: 1 / -1;
         grid-row: 2;
+        user-select: none;
       }
     }
   }

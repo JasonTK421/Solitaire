@@ -33,7 +33,7 @@ function deck() {
       cardID++;
     }
   }
-  console.log(...cards);
+  // console.log(...cards);
   return cards;
 }
 
@@ -89,7 +89,6 @@ function dealCards(deck, drawPile, tablePiles) {
   }
   tablePiles.forEach(pile => {
     pile.cards.forEach((card, i) => {
-      console.log(card[i]);
       if (card[i] === pile.cards.length - 1) {
         flipCard(card);
       }
@@ -114,12 +113,12 @@ function createCardElements(cardPiles) {
 
       const div = document.createElement('div');
       div.className = `card`;
-      div.draggable = true;
+      div.draggable = false;
       div.id = card.cardID;
       div.style.zIndex = zIndex(i);
       div.innerHTML += `
           <div class="card__side card__side--back"></div>
-          <div class="card__side card__side--front faceDown">
+          <div class="card__side card__side--front ">
           <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
           <img
             class="card__side--front-icon"
@@ -181,6 +180,7 @@ function displayCards(cardPile) {
 }
 
 function updateCardPileVisuals(cardPile) {
+  console.log(cardPile.cards.length);
   if (cardPile.cards.length === 0) {
     cardPile.element.classList.add('emptyPile');
     cardPile.element.classList.remove('fullPile');
@@ -214,6 +214,7 @@ function testCheckAllCardPiles(cardPiles) {
 }
 
 // MAIN PROGRAM
+const playField = document.getElementById('playfield');
 const myshuffledDeck = shuffelDeck(new deck());
 const cardPiles = new buildCardPiles();
 const tablePiles = cardPiles.slice(6);
@@ -239,21 +240,109 @@ let currentCardPile = null;
 let targetCardPile = null;
 let grabbedCards = [];
 const cards = document.querySelectorAll('.card');
-const dropables = document.querySelectorAll('.dropable');
+const droppables = document.querySelectorAll('.droppable');
 
 cards.forEach(card => {
-  card.addEventListener('dragstart', dragStart);
-  card.addEventListener('dragend', dragEnd);
+  card.onmousedown = function (event) {
+    let elementBelow = getElementBelow();
+    let currentDroppable = null;
+
+    cardPiles.forEach(cardPile => {
+      if (elementBelow.closest(`#${cardPile.name}`)) {
+        currentCardPile = cardPile;
+        targetCardPile = cardPile;
+      }
+    });
+    console.log(currentCardPile);
+    console.log(getIndex(card));
+    grabbedCards = pickUpCards(getIndex(card), currentCardPile.cards);
+    updateCardPileVisuals(currentCardPile);
+
+    playField.append(card);
+    card.style.zIndex = 1000;
+
+    function moveAt(pageX, pageY) {
+      card.style.left = pageX - card.offsetWidth / 2 + 'px';
+      card.style.top = pageY - card.offsetHeight / 2 + 'px';
+    }
+
+    moveAt(event.pageX, event.pageY);
+
+    function onMouseMove(event) {
+      moveAt(event.pageX, event.pageY);
+
+      elementBelow = getElementBelow();
+
+      if (!elementBelow) return;
+
+      let droppableBelow = elementBelow.closest('.droppable');
+
+      if (currentDroppable != droppableBelow) {
+        if (currentDroppable) {
+          // leaveDroppable(currentDroppable);
+          targetCardPile = currentCardPile;
+          toggleHover(currentDroppable);
+        }
+        currentDroppable = droppableBelow;
+
+        if (currentDroppable) {
+          // enterDroppable(currentDroppable);
+          cardPiles.forEach(cardPile => {
+            if (cardPile.name === currentDroppable.id) {
+              targetCardPile = cardPile;
+            }
+          });
+          toggleHover(currentDroppable);
+        }
+      }
+    }
+    document.addEventListener('mousemove', onMouseMove);
+
+    card.onmouseup = function () {
+      document.removeEventListener('mousemove', onMouseMove);
+      card.onmouseup = null;
+
+      dropCards(grabbedCards, targetCardPile.cards);
+      // pickUpCards(getIndex(this), grabbedCards, targetCardPile.cards);
+      updateZIndex(targetCardPile);
+      displayCards(targetCardPile);
+      updateCardPileVisuals(targetCardPile);
+      card.style.left = 0;
+      card.style.top = 0;
+
+      if (currentDroppable) {
+        toggleHover(currentDroppable);
+      }
+      testCheckAllCardPiles(cardPiles);
+    };
+  };
+  function getElementBelow() {
+    card.hidden = true;
+    let element = document.elementFromPoint(event.clientX, event.clientY);
+    card.hidden = false;
+    return element;
+  }
+  // card.addEventListener('dragstart', dragStart);
+  // card.addEventListener('dragend', dragEnd);
 });
 
-dropables.forEach(dropable => {
-  dropable.addEventListener('dragover', dragOver);
-  dropable.addEventListener('dragenter', dragEnter);
-  dropable.addEventListener('dragleave', dragLeave);
-  dropable.addEventListener('drop', dragDrop);
+droppables.forEach(droppable => {
+  droppable.addEventListener('dragover', dragOver);
+  droppable.addEventListener('dragenter', dragEnter);
+  droppable.addEventListener('dragleave', dragLeave);
+  droppable.addEventListener('drop', dragDrop);
 });
 
 drawPile.element.addEventListener('click', cycleDrawPile);
+
+function toggleHover(currentDroppable) {
+  if (currentDroppable.classList.contains('hover')) {
+    currentDroppable.classList.remove('hover');
+  } else {
+    currentDroppable.classList.add('hover');
+  }
+}
+
 function cycleDrawPile() {
   if (drawPile.cards.length === 0) {
     const cardCount = waste.cards.length;
@@ -279,18 +368,18 @@ function cycleDrawPile() {
   // testCheckAllCardPiles(cardPiles);
 }
 
-function dragStart() {
-  cardPiles.forEach(cardPile => {
-    if (this.closest(`#${cardPile.name}`)) {
-      currentCardPile = cardPile;
-      targetCardPile = cardPile;
-    }
-  });
+// function dragStart() {
+//   cardPiles.forEach(cardPile => {
+//     if (this.closest(`#${cardPile.name}`)) {
+//       currentCardPile = cardPile;
+//       targetCardPile = cardPile;
+//     }
+//   });
 
-  grabbedCards = pickUpCards(getIndex(this), currentCardPile.cards);
-  updateCardPileVisuals(currentCardPile);
-  setTimeout(() => this.classList.add('invisible'), 0);
-}
+//   grabbedCards = pickUpCards(getIndex(this), currentCardPile.cards);
+//   updateCardPileVisuals(currentCardPile);
+//   setTimeout(() => this.classList.add('invisible'), 0);
+// }
 
 function dragEnd() {
   dropCards(grabbedCards, targetCardPile.cards);
