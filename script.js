@@ -118,7 +118,7 @@ function createCardElements(cardPiles) {
       div.style.zIndex = zIndex(i);
       div.innerHTML += `
           <div class="card__side card__side--back"></div>
-          <div class="card__side card__side--front ">
+          <div class="card__side card__side--front faceDown">
           <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
           <img
             class="card__side--front-icon"
@@ -244,7 +244,7 @@ const droppables = document.querySelectorAll('.droppable');
 
 cards.forEach(card => {
   card.onmousedown = function (event) {
-    let elementBelow = getElementBelow();
+    let elementBelow = getElementBelow(event);
     let currentDroppable = null;
 
     cardPiles.forEach(cardPile => {
@@ -271,7 +271,7 @@ cards.forEach(card => {
     function onMouseMove(event) {
       moveAt(event.pageX, event.pageY);
 
-      elementBelow = getElementBelow();
+      elementBelow = getElementBelow(event);
 
       if (!elementBelow) return;
 
@@ -316,7 +316,8 @@ cards.forEach(card => {
       testCheckAllCardPiles(cardPiles);
     };
   };
-  function getElementBelow() {
+
+  function getElementBelow(event) {
     card.hidden = true;
     let element = document.elementFromPoint(event.clientX, event.clientY);
     card.hidden = false;
@@ -324,13 +325,6 @@ cards.forEach(card => {
   }
   // card.addEventListener('dragstart', dragStart);
   // card.addEventListener('dragend', dragEnd);
-});
-
-droppables.forEach(droppable => {
-  droppable.addEventListener('dragover', dragOver);
-  droppable.addEventListener('dragenter', dragEnter);
-  droppable.addEventListener('dragleave', dragLeave);
-  droppable.addEventListener('drop', dragDrop);
 });
 
 drawPile.element.addEventListener('click', cycleDrawPile);
@@ -366,51 +360,4 @@ function cycleDrawPile() {
   updateCardPileVisuals(waste);
 
   // testCheckAllCardPiles(cardPiles);
-}
-
-// function dragStart() {
-//   cardPiles.forEach(cardPile => {
-//     if (this.closest(`#${cardPile.name}`)) {
-//       currentCardPile = cardPile;
-//       targetCardPile = cardPile;
-//     }
-//   });
-
-//   grabbedCards = pickUpCards(getIndex(this), currentCardPile.cards);
-//   updateCardPileVisuals(currentCardPile);
-//   setTimeout(() => this.classList.add('invisible'), 0);
-// }
-
-function dragEnd() {
-  dropCards(grabbedCards, targetCardPile.cards);
-  // pickUpCards(getIndex(this), grabbedCards, targetCardPile.cards);
-  updateZIndex(targetCardPile);
-  displayCards(targetCardPile);
-  updateCardPileVisuals(targetCardPile);
-  this.classList.remove('invisible');
-
-  testCheckAllCardPiles(cardPiles);
-}
-
-function dragOver(e) {
-  e.preventDefault();
-}
-
-function dragEnter(e) {
-  e.preventDefault();
-  cardPiles.forEach(cardPile => {
-    if (cardPile.name === this.id) {
-      targetCardPile = cardPile;
-    }
-  });
-  this.classList.add('hover');
-}
-
-function dragLeave() {
-  targetCardPile = currentCardPile;
-  this.classList.remove('hover');
-}
-
-function dragDrop() {
-  this.classList.remove('hover');
 }
