@@ -49,8 +49,9 @@ function shuffelDeck(deck) {
   return shuffledDeck;
 }
 
-function cardPile(name, element, cards) {
+function cardPile(name, type, element, cards) {
   this.name = name;
+  this.type = type;
   this.element = element;
   this.cards = cards;
 }
@@ -74,8 +75,19 @@ function buildCardPiles() {
 
   const cardPiles = [];
   for (let i = 0; i < this.name.length; i++) {
+    let pileType;
+
+    if (this.name[i].startsWith('foundation')) pileType = 'foundation';
+    else if (this.name[i].startsWith('table')) pileType = 'table';
+    else pileType = this.name[i];
+
     cardPiles.push(
-      new cardPile(this.name[i], document.getElementById(this.name[i]), [])
+      new cardPile(
+        this.name[i],
+        pileType,
+        document.getElementById(this.name[i]),
+        []
+      )
     );
   }
   return cardPiles;
@@ -219,13 +231,13 @@ function toggleHover(currentDroppable) {
 }
 
 function dropCards(currentCardPile, newCardPile) {
+  // check if can drop into new pile
+  //
   const length = currentCardPile.length;
   for (let i = 0; i < length; i++) {
     newCardPile.push(currentCardPile.pop());
   }
 }
-
-function updateCardPile(pile) {}
 
 function updateZIndex(pile) {
   pile.cards.forEach((card, i) => {
@@ -267,7 +279,7 @@ hideCards(drawPile);
 
 tablePiles.forEach(pile => {
   pile.cards.forEach((card, i) => {
-    card.element.style.top = `${i * 2}rem`;
+    card.element.style.top = `${i * 1.5}rem`;
   });
 });
 
@@ -334,9 +346,12 @@ cards.forEach(card => {
       document.removeEventListener('mousemove', onMouseMove);
       card.onmouseup = null;
 
+      //check target pile type
+      // check if can drop in target pile
+      // append card into correct pile
+      // update card placement in pile
+
       dropCards(grabbedCards, targetCardPile.cards);
-      updateCardPile(currentCardPile);
-      updateCardPile(targetCardPile);
       updateZIndex(targetCardPile);
       appendCard(targetCardPile);
       updateCardPileVisuals(targetCardPile);
