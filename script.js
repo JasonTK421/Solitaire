@@ -34,7 +34,6 @@ function deck() {
       cardID++;
     }
   }
-  // console.log(...cards);
   return cards;
 }
 
@@ -82,6 +81,39 @@ function buildCardPiles() {
   return cardPiles;
 }
 
+function cycleDrawPile() {
+  if (drawPile.cards.length === 0) {
+    const cardCount = waste.cards.length;
+    for (let i = 0; i < cardCount; i++) {
+      const card = waste.cards.pop();
+      drawPile.cards.push(card);
+      updateZIndex(drawPile);
+      appendCard(drawPile);
+      hideCards(drawPile);
+    }
+  } else {
+    const card = drawPile.cards.pop();
+    card.element.style.visibility = 'visible';
+    waste.cards.push(card);
+    updateZIndex(waste);
+    appendCard(waste);
+  }
+
+  if (drawPile.cards.length === 0) {
+    drawPile.element.classList.remove('card__back');
+  } else if (
+    drawPile.cards.length > 0 &&
+    !drawPile.element.classList.contains('card__back')
+  ) {
+    drawPile.element.classList.add('card__back');
+  }
+
+  updateCardPileVisuals(drawPile);
+  updateCardPileVisuals(waste);
+
+  // testCheckAllCardPiles(cardPiles);
+}
+
 function dealCards(deck, drawPile, tablePiles) {
   for (let i = 0; i < tablePiles.length; i++) {
     for (let j = i; j < tablePiles.length; j++) {
@@ -93,7 +125,6 @@ function dealCards(deck, drawPile, tablePiles) {
       if (i !== pile.cards.length - 1) {
         card.isFaceUp = false;
       }
-      console.log(card.name, card.suit, card.isFaceUp);
     });
   });
   drawPile.cards = deck;
@@ -136,24 +167,9 @@ function SetZIndex(i) {
   return (i = i + 101);
 }
 
-function pickUpCards(index, currentCardPile) {
-  const cards = [];
-  for (let i = currentCardPile.length - 1; i >= index; i--) {
-    cards.push(currentCardPile.pop());
-  }
-  return cards;
-}
-
-function dropCards(currentCardPile, newCardPile) {
-  const length = currentCardPile.length;
-  for (let i = 0; i < length; i++) {
-    newCardPile.push(currentCardPile.pop());
-  }
-}
-
-function updateZIndex(pile) {
-  pile.cards.forEach((card, i) => {
-    card.element.style.zIndex = SetZIndex(i);
+function hideCards(pile) {
+  pile.cards.forEach(card => {
+    card.element.style.visibility = 'hidden';
   });
 }
 
@@ -172,8 +188,15 @@ function appendCard(pile) {
   });
 }
 
+function pickUpCards(index, currentCardPile) {
+  const cards = [];
+  for (let i = currentCardPile.length - 1; i >= index; i--) {
+    cards.push(currentCardPile.pop());
+  }
+  return cards;
+}
+
 function updateCardPileVisuals(pile) {
-  console.log(pile.cards.length);
   if (pile.cards.length === 0) {
     pile.element.classList.add('emptyPile');
     pile.element.classList.remove('fullPile');
@@ -187,12 +210,30 @@ function updateCardPileVisuals(pile) {
   }
 }
 
-function hideCards(pile) {
-  pile.cards.forEach(card => {
-    card.element.style.visibility = 'hidden';
+function toggleHover(currentDroppable) {
+  if (currentDroppable.classList.contains('hover')) {
+    currentDroppable.classList.remove('hover');
+  } else {
+    currentDroppable.classList.add('hover');
+  }
+}
+
+function dropCards(currentCardPile, newCardPile) {
+  const length = currentCardPile.length;
+  for (let i = 0; i < length; i++) {
+    newCardPile.push(currentCardPile.pop());
+  }
+}
+
+function updateCardPile(pile) {}
+
+function updateZIndex(pile) {
+  pile.cards.forEach((card, i) => {
+    card.element.style.zIndex = SetZIndex(i);
   });
 }
 
+// TODO remove when finished testing
 function testCheckAllCardPiles(cardPiles) {
   console.log(
     '-------------------------------------------------------------------------'
@@ -200,15 +241,11 @@ function testCheckAllCardPiles(cardPiles) {
   cardPiles.forEach(pile => {
     console.log(`Name: ${pile.name} | Lenght: ${pile.cards.length}`);
     console.log(pile.cards);
-    // console.log(`Lenght: ${pile.cards.length}`);
   });
 }
 
 // MAIN PROGRAM
 /////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-
-//INITIAL SETUP
 /////////////////////////////////////////////////////////////////////////////
 
 const playField = document.getElementById('playfield');
@@ -217,6 +254,12 @@ const cardPiles = new buildCardPiles();
 const tablePiles = cardPiles.slice(6);
 const drawPile = cardPiles[0];
 const waste = cardPiles[1];
+
+let currentCardPile = null;
+let targetCardPile = null;
+let grabbedCards = [];
+
+drawPile.element.addEventListener('click', cycleDrawPile);
 
 dealCards(myshuffledDeck, drawPile, tablePiles);
 createCardElements(cardPiles);
@@ -232,18 +275,10 @@ cardPiles.forEach(pile => {
   appendCard(pile);
 });
 
-/////////////////////////////////////////////////////////////////////////////
-
-let currentCardPile = null;
-let targetCardPile = null;
-let grabbedCards = [];
 const cards = document.querySelectorAll('.card');
-const droppables = document.querySelectorAll('.droppable');
 
 cards.forEach(card => {
-  console.log(card);
   card.onmousedown = function (event) {
-    console.log('click');
     let elementBelow = getElementBelow(event);
     let currentDroppable = null;
 
@@ -253,7 +288,7 @@ cards.forEach(card => {
         targetCardPile = cardPile;
       }
     });
-    console.log(currentCardPile);
+
     grabbedCards = pickUpCards(card.style.zIndex - 101, currentCardPile.cards);
     updateCardPileVisuals(currentCardPile);
 
@@ -278,14 +313,12 @@ cards.forEach(card => {
 
       if (currentDroppable != droppableBelow) {
         if (currentDroppable) {
-          // leaveDroppable(currentDroppable);
           targetCardPile = currentCardPile;
           toggleHover(currentDroppable);
         }
         currentDroppable = droppableBelow;
 
         if (currentDroppable) {
-          // enterDroppable(currentDroppable);
           cardPiles.forEach(cardPile => {
             if (cardPile.name === currentDroppable.id) {
               targetCardPile = cardPile;
@@ -302,6 +335,8 @@ cards.forEach(card => {
       card.onmouseup = null;
 
       dropCards(grabbedCards, targetCardPile.cards);
+      updateCardPile(currentCardPile);
+      updateCardPile(targetCardPile);
       updateZIndex(targetCardPile);
       appendCard(targetCardPile);
       updateCardPileVisuals(targetCardPile);
@@ -311,7 +346,7 @@ cards.forEach(card => {
       if (currentDroppable) {
         toggleHover(currentDroppable);
       }
-      testCheckAllCardPiles(cardPiles);
+      // testCheckAllCardPiles(cardPiles);
     };
   };
 
@@ -322,46 +357,3 @@ cards.forEach(card => {
     return element;
   }
 });
-
-drawPile.element.addEventListener('click', cycleDrawPile);
-
-function toggleHover(currentDroppable) {
-  if (currentDroppable.classList.contains('hover')) {
-    currentDroppable.classList.remove('hover');
-  } else {
-    currentDroppable.classList.add('hover');
-  }
-}
-
-function cycleDrawPile() {
-  if (drawPile.cards.length === 0) {
-    const cardCount = waste.cards.length;
-    for (let i = 0; i < cardCount; i++) {
-      const card = waste.cards.pop();
-      drawPile.cards.push(card);
-      updateZIndex(drawPile);
-      appendCard(drawPile);
-      hideCards(drawPile);
-    }
-  } else {
-    const card = drawPile.cards.pop();
-    card.element.style.visibility = 'visible';
-    waste.cards.push(card);
-    updateZIndex(waste);
-    appendCard(waste);
-  }
-
-  if (drawPile.cards.length === 0) {
-    drawPile.element.classList.remove('card__back');
-  } else if (
-    drawPile.cards.length > 0 &&
-    !drawPile.element.classList.contains('card__back')
-  ) {
-    drawPile.element.classList.add('card__back');
-  }
-
-  updateCardPileVisuals(drawPile);
-  updateCardPileVisuals(waste);
-
-  // testCheckAllCardPiles(cardPiles);
-}
