@@ -1,7 +1,7 @@
 .playfield {
   display: grid;
   grid-template-columns: repeat(7, $card-width);
-  grid-template-rows: repeat(3, $card-width * 1.4);
+  grid-template-rows: repeat(4, $card-width * 1.4);
   gap: 1.5rem;
   padding: 2rem 2.1rem 3rem 2.1rem;
 

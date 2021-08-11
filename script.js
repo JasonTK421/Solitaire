@@ -1,11 +1,12 @@
 'use strict';
 
-function card(value, name, suit, cardID) {
+function card(value, name, suit, cardID, isFaceUp) {
   this.value = value;
   this.name = name;
   this.suit = suit;
   this.cardID = cardID;
   this.element;
+  this.isFaceUp = isFaceUp;
 }
 
 function deck() {
@@ -29,7 +30,7 @@ function deck() {
   let cardID = 1;
   for (let i = 0; i < this.suit.length; i++) {
     for (let j = 0; j < this.name.length; j++) {
-      cards.push(new card(j + 1, this.name[j], this.suit[i], cardID));
+      cards.push(new card(j + 1, this.name[j], this.suit[i], cardID, true));
       cardID++;
     }
   }
@@ -89,9 +90,10 @@ function dealCards(deck, drawPile, tablePiles) {
   }
   tablePiles.forEach(pile => {
     pile.cards.forEach((card, i) => {
-      if (card[i] === pile.cards.length - 1) {
-        flipCard(card);
+      if (i !== pile.cards.length - 1) {
+        card.isFaceUp = false;
       }
+      console.log(card.name, card.suit, card.isFaceUp);
     });
   });
   drawPile.cards = deck;
@@ -149,30 +151,39 @@ function dropCards(currentCardPile, newCardPile) {
   }
 }
 
-function updateZIndex(cardPile) {
-  cardPile.cards.forEach((card, i) => {
+function updateZIndex(pile) {
+  pile.cards.forEach((card, i) => {
     card.element.style.zIndex = SetZIndex(i);
   });
 }
 
-function appendCard(cardPile) {
-  cardPile.cards.forEach(card => {
-    cardPile.element.appendChild(card.element);
+function appendCard(pile) {
+  pile.cards.forEach((card, i) => {
+    if (!card.isFaceUp) {
+      const cardBack = document.createElement('div');
+      cardBack.className = `cardBack`;
+      cardBack.draggable = false;
+      cardBack.style.zIndex = i;
+      cardBack.style.top = card.element.style.top;
+      pile.element.appendChild(cardBack);
+    } else {
+      pile.element.appendChild(card.element);
+    }
   });
 }
 
-function updateCardPileVisuals(cardPile) {
-  console.log(cardPile.cards.length);
-  if (cardPile.cards.length === 0) {
-    cardPile.element.classList.add('emptyPile');
-    cardPile.element.classList.remove('fullPile');
+function updateCardPileVisuals(pile) {
+  console.log(pile.cards.length);
+  if (pile.cards.length === 0) {
+    pile.element.classList.add('emptyPile');
+    pile.element.classList.remove('fullPile');
     return;
   }
 
-  if (cardPile.element.classList.contains('fullPile')) return;
+  if (pile.element.classList.contains('fullPile')) return;
   else {
-    cardPile.element.classList.add('fullPile');
-    cardPile.element.classList.remove('emptyPile');
+    pile.element.classList.add('fullPile');
+    pile.element.classList.remove('emptyPile');
   }
 }
 

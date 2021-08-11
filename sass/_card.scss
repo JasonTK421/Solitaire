@@ -1,11 +1,16 @@
-.card {
+.card,
+.cardBack {
   width: $card-width;
   height: $card-width * 1.4;
+  border-radius: $card-corners;
+  position: absolute;
+}
+
+.card {
   background-color: $color-white;
   border-radius: $card-corners;
   box-shadow: inset 0px 0px 20px $color-inner-shadow;
   backface-visibility: hidden;
-  position: absolute;
 
   &__face {
     width: inherit;
@@ -44,12 +49,12 @@
       pointer-events: none;
     }
   }
+}
 
-  &__back {
-    background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
-    border: 0.3rem solid $color-white;
-    z-index: 1;
-  }
+.cardBack {
+  background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
+  border: 0.3rem solid $color-white;
+  z-index: 1;
 }
 
 .faceDown {

@@ -47,16 +47,21 @@ html {
   padding: 1px;
 }
 
-.card {
+.card,
+.cardBack {
   width: 12.4rem;
   height: 17.36rem;
+  border-radius: 0.8rem;
+  position: absolute;
+}
+
+.card {
   background-color: #fbfbfb;
-  border-radius: 0.5rem;
+  border-radius: 0.8rem;
   -webkit-box-shadow: inset 0px 0px 20px #9b9b9bbf;
           box-shadow: inset 0px 0px 20px #9b9b9bbf;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-  position: absolute;
 }
 
 .card__face {
@@ -122,7 +127,7 @@ html {
   pointer-events: none;
 }
 
-.card__back {
+.cardBack {
   background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
   background: linear-gradient(to bottom right, maroon, #b47979);
   border: 0.3rem solid #fbfbfb;
@@ -221,8 +226,8 @@ html {
   display: grid;
   -ms-grid-columns: (12.4rem)[7];
       grid-template-columns: repeat(7, 12.4rem);
-  -ms-grid-rows: (17.36rem)[3];
-      grid-template-rows: repeat(3, 17.36rem);
+  -ms-grid-rows: (17.36rem)[4];
+      grid-template-rows: repeat(4, 17.36rem);
   gap: 1.5rem;
   padding: 2rem 2.1rem 3rem 2.1rem;
 }
