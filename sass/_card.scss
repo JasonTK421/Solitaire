@@ -1,57 +1,54 @@
 .card {
   width: $card-width;
   height: $card-width * 1.4;
+  background-color: $color-white;
+  border-radius: $card-corners;
+  box-shadow: inset 0px 0px 20px $color-inner-shadow;
+  backface-visibility: hidden;
   position: absolute;
 
-  &__side {
+  &__face {
     width: inherit;
     height: inherit;
-    border-radius: $card-corners;
-    box-shadow: inset 0px 0px 20px $color-inner-shadow;
-    backface-visibility: hidden;
-    position: absolute;
-    pointer-events: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 3fr;
 
-    &--back {
-      background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
-      border: 0.3rem solid $color-white;
-      z-index: 1;
+    &--num {
+      align-self: center;
+      padding-left: 0.7rem;
+      grid-column: 1;
+      grid-row: 1;
+      user-select: none;
+      pointer-events: none;
     }
 
-    &--front {
-      background-color: $color-white;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto 3fr;
-      z-index: 2;
-
-      &-num {
-        align-self: center;
-        padding-left: 0.7rem;
-        grid-column: 1;
-        grid-row: 1;
-        user-select: none;
-      }
-
-      &-icon {
-        align-self: center;
-        justify-self: right;
-        width: 3.2rem;
-        padding-right: 0.7rem;
-        grid-column: 2;
-        grid-row: 1;
-        user-select: none;
-      }
-
-      &-suit {
-        width: 9rem;
-        align-self: center;
-        justify-self: center;
-        grid-column: 1 / -1;
-        grid-row: 2;
-        user-select: none;
-      }
+    &--icon {
+      align-self: center;
+      justify-self: right;
+      width: 3.2rem;
+      padding-right: 0.7rem;
+      grid-column: 2;
+      grid-row: 1;
+      user-select: none;
+      pointer-events: none;
     }
+
+    &--suit {
+      width: 9rem;
+      align-self: center;
+      justify-self: center;
+      grid-column: 1 / -1;
+      grid-row: 2;
+      user-select: none;
+      pointer-events: none;
+    }
+  }
+
+  &__back {
+    background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
+    border: 0.3rem solid $color-white;
+    z-index: 1;
   }
 }
 

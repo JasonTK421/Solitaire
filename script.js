@@ -109,22 +109,22 @@ function createCardElements(cardPiles) {
       div.id = card.cardID;
       div.style.zIndex = SetZIndex(i);
       div.innerHTML += `
-          <div class="card__side card__side--back"></div>
-          <div class="card__side card__side--front faceDown">
-          <h3 class="heading-3 card__side--front-num ${color}" draggable="false">${card.name}</h3>
+      <div class="card__face">
+          <h3 class="heading-3 card__face--num ${color}" draggable="false">${card.name}</h3>
           <img
-            class="card__side--front-icon"
+            class="card__face--icon"
             draggable="false"
             src="images/icon-${card.suit}.svg"
             alt="${card.suit}"
           />
           <img
-            class="card__side--front-suit"
+            class="card__face--suit"
             draggable="false"
             src="images/icon-${card.suit}.svg"
             alt="${card.suit}"
           />
-          </div>`;
+        </div>
+      </div>`;
       card.element = div;
     });
   });
@@ -176,14 +176,6 @@ function updateCardPileVisuals(cardPile) {
   }
 }
 
-function flipCard(card) {
-  const sides = card.element.children;
-  for (let i = 0; i < sides.length; i++) {
-    sides[i].classList.toggle('faceDown');
-  }
-  return card;
-}
-
 function hideCards(pile) {
   pile.cards.forEach(card => {
     card.element.style.visibility = 'hidden';
@@ -202,6 +194,12 @@ function testCheckAllCardPiles(cardPiles) {
 }
 
 // MAIN PROGRAM
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+
+//INITIAL SETUP
+/////////////////////////////////////////////////////////////////////////////
+
 const playField = document.getElementById('playfield');
 const myshuffledDeck = shuffelDeck(new deck());
 const cardPiles = new buildCardPiles();
@@ -217,13 +215,13 @@ tablePiles.forEach(pile => {
   pile.cards.forEach((card, i) => {
     card.element.style.top = `${i * 2}rem`;
   });
-  //flip top card of pile
-  flipCard(pile.cards[pile.cards.length - 1]);
 });
 
 cardPiles.forEach(pile => {
   appendCard(pile);
 });
+
+/////////////////////////////////////////////////////////////////////////////
 
 let currentCardPile = null;
 let targetCardPile = null;
@@ -232,7 +230,9 @@ const cards = document.querySelectorAll('.card');
 const droppables = document.querySelectorAll('.droppable');
 
 cards.forEach(card => {
+  console.log(card);
   card.onmousedown = function (event) {
+    console.log('click');
     let elementBelow = getElementBelow(event);
     let currentDroppable = null;
 
@@ -327,7 +327,6 @@ function cycleDrawPile() {
     const cardCount = waste.cards.length;
     for (let i = 0; i < cardCount; i++) {
       const card = waste.cards.pop();
-      flipCard(card);
       drawPile.cards.push(card);
       updateZIndex(drawPile);
       appendCard(drawPile);
@@ -335,7 +334,6 @@ function cycleDrawPile() {
     }
   } else {
     const card = drawPile.cards.pop();
-    flipCard(card);
     card.element.style.visibility = 'visible';
     waste.cards.push(card);
     updateZIndex(waste);
@@ -343,12 +341,12 @@ function cycleDrawPile() {
   }
 
   if (drawPile.cards.length === 0) {
-    drawPile.element.classList.remove('card__side--back');
+    drawPile.element.classList.remove('card__back');
   } else if (
     drawPile.cards.length > 0 &&
-    !drawPile.element.classList.contains('card__side--back')
+    !drawPile.element.classList.contains('card__back')
   ) {
-    drawPile.element.classList.add('card__side--back');
+    drawPile.element.classList.add('card__back');
   }
 
   updateCardPileVisuals(drawPile);

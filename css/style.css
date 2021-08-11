@@ -50,40 +50,27 @@ html {
 .card {
   width: 12.4rem;
   height: 17.36rem;
-  position: absolute;
-}
-
-.card__side {
-  width: inherit;
-  height: inherit;
+  background-color: #fbfbfb;
   border-radius: 0.5rem;
   -webkit-box-shadow: inset 0px 0px 20px #9b9b9bbf;
           box-shadow: inset 0px 0px 20px #9b9b9bbf;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   position: absolute;
-  pointer-events: none;
 }
 
-.card__side--back {
-  background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
-  background: linear-gradient(to bottom right, maroon, #b47979);
-  border: 0.3rem solid #fbfbfb;
-  z-index: 1;
-}
-
-.card__side--front {
-  background-color: #fbfbfb;
+.card__face {
+  width: inherit;
+  height: inherit;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr 1fr;
       grid-template-columns: 1fr 1fr;
   -ms-grid-rows: auto 3fr;
       grid-template-rows: auto 3fr;
-  z-index: 2;
 }
 
-.card__side--front-num {
+.card__face--num {
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center;
@@ -96,9 +83,10 @@ html {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  pointer-events: none;
 }
 
-.card__side--front-icon {
+.card__face--icon {
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center;
@@ -114,9 +102,10 @@ html {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  pointer-events: none;
 }
 
-.card__side--front-suit {
+.card__face--suit {
   width: 9rem;
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
@@ -130,6 +119,14 @@ html {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  pointer-events: none;
+}
+
+.card__back {
+  background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
+  background: linear-gradient(to bottom right, maroon, #b47979);
+  border: 0.3rem solid #fbfbfb;
+  z-index: 1;
 }
 
 .faceDown {
