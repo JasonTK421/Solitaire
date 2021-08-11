@@ -97,14 +97,6 @@ function dealCards(deck, drawPile, tablePiles) {
   drawPile.cards = deck;
 }
 
-function toggleDraggable(card) {
-  if (card.element.draggable === false) {
-    card.element.draggable = true;
-  } else {
-    card.element.draggable = false;
-  }
-}
-
 function createCardElements(cardPiles) {
   cardPiles.forEach(cardPile => {
     cardPile.cards.forEach((card, i) => {
@@ -115,7 +107,7 @@ function createCardElements(cardPiles) {
       div.className = `card`;
       div.draggable = false;
       div.id = card.cardID;
-      div.style.zIndex = zIndex(i);
+      div.style.zIndex = SetZIndex(i);
       div.innerHTML += `
           <div class="card__side card__side--back"></div>
           <div class="card__side card__side--front faceDown">
@@ -138,18 +130,8 @@ function createCardElements(cardPiles) {
   });
 }
 
-function setCardPosition(cards) {
-  cards.forEach((card, i) => {
-    card.element.style.top = `${i * 2}rem`;
-  });
-}
-
-function zIndex(i) {
+function SetZIndex(i) {
   return (i = i + 101);
-}
-
-function getIndex(element) {
-  return element.style.zIndex - 101;
 }
 
 function pickUpCards(index, currentCardPile) {
@@ -169,11 +151,11 @@ function dropCards(currentCardPile, newCardPile) {
 
 function updateZIndex(cardPile) {
   cardPile.cards.forEach((card, i) => {
-    card.element.style.zIndex = zIndex(i);
+    card.element.style.zIndex = SetZIndex(i);
   });
 }
 
-function displayCards(cardPile) {
+function appendCard(cardPile) {
   cardPile.cards.forEach(card => {
     cardPile.element.appendChild(card.element);
   });
@@ -202,6 +184,12 @@ function flipCard(card) {
   return card;
 }
 
+function hideCards(pile) {
+  pile.cards.forEach(card => {
+    card.element.style.visibility = 'hidden';
+  });
+}
+
 function testCheckAllCardPiles(cardPiles) {
   console.log(
     '-------------------------------------------------------------------------'
@@ -223,17 +211,18 @@ const waste = cardPiles[1];
 
 dealCards(myshuffledDeck, drawPile, tablePiles);
 createCardElements(cardPiles);
+hideCards(drawPile);
 
-drawPile.cards.forEach(card => {
-  toggleDraggable(card);
+tablePiles.forEach(pile => {
+  pile.cards.forEach((card, i) => {
+    card.element.style.top = `${i * 2}rem`;
+  });
+  //flip top card of pile
+  flipCard(pile.cards[pile.cards.length - 1]);
 });
 
-tablePiles.forEach(cardPile => {
-  setCardPosition(cardPile.cards);
-});
-
-cardPiles.forEach(cardPile => {
-  displayCards(cardPile);
+cardPiles.forEach(pile => {
+  appendCard(pile);
 });
 
 let currentCardPile = null;
@@ -254,8 +243,7 @@ cards.forEach(card => {
       }
     });
     console.log(currentCardPile);
-    console.log(getIndex(card));
-    grabbedCards = pickUpCards(getIndex(card), currentCardPile.cards);
+    grabbedCards = pickUpCards(card.style.zIndex - 101, currentCardPile.cards);
     updateCardPileVisuals(currentCardPile);
 
     playField.append(card);
@@ -303,9 +291,8 @@ cards.forEach(card => {
       card.onmouseup = null;
 
       dropCards(grabbedCards, targetCardPile.cards);
-      // pickUpCards(getIndex(this), grabbedCards, targetCardPile.cards);
       updateZIndex(targetCardPile);
-      displayCards(targetCardPile);
+      appendCard(targetCardPile);
       updateCardPileVisuals(targetCardPile);
       card.style.left = 0;
       card.style.top = 0;
@@ -323,8 +310,6 @@ cards.forEach(card => {
     card.hidden = false;
     return element;
   }
-  // card.addEventListener('dragstart', dragStart);
-  // card.addEventListener('dragend', dragEnd);
 });
 
 drawPile.element.addEventListener('click', cycleDrawPile);
@@ -343,19 +328,29 @@ function cycleDrawPile() {
     for (let i = 0; i < cardCount; i++) {
       const card = waste.cards.pop();
       flipCard(card);
-      toggleDraggable(card);
       drawPile.cards.push(card);
       updateZIndex(drawPile);
-      displayCards(drawPile);
+      appendCard(drawPile);
+      hideCards(drawPile);
     }
   } else {
     const card = drawPile.cards.pop();
     flipCard(card);
-    toggleDraggable(card);
+    card.element.style.visibility = 'visible';
     waste.cards.push(card);
     updateZIndex(waste);
-    displayCards(waste);
+    appendCard(waste);
   }
+
+  if (drawPile.cards.length === 0) {
+    drawPile.element.classList.remove('card__side--back');
+  } else if (
+    drawPile.cards.length > 0 &&
+    !drawPile.element.classList.contains('card__side--back')
+  ) {
+    drawPile.element.classList.add('card__side--back');
+  }
+
   updateCardPileVisuals(drawPile);
   updateCardPileVisuals(waste);
 
