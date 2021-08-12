@@ -9,6 +9,7 @@
 .card {
   background-color: $color-white;
   border-radius: $card-corners;
+  border: 0.2rem solid $color-cardface-border;
   box-shadow: inset 0px 0px 20px $color-inner-shadow;
   backface-visibility: hidden;
 

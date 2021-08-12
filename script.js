@@ -51,6 +51,7 @@ function shuffelDeck(deck) {
 
 function cardPile(name, type, element, cards) {
   this.name = name;
+  this.suit;
   this.type = type;
   this.element = element;
   this.cards = cards;
@@ -112,12 +113,12 @@ function cycleDrawPile() {
   }
 
   if (drawPile.cards.length === 0) {
-    drawPile.element.classList.remove('card__back');
+    drawPile.element.classList.remove('cardBack');
   } else if (
     drawPile.cards.length > 0 &&
-    !drawPile.element.classList.contains('card__back')
+    !drawPile.element.classList.contains('cardBack')
   ) {
-    drawPile.element.classList.add('card__back');
+    drawPile.element.classList.add('cardBack');
   }
 
   updateCardPileVisuals(drawPile);
@@ -230,12 +231,10 @@ function toggleHover(currentDroppable) {
   }
 }
 
-function dropCards(currentCardPile, newCardPile) {
-  // check if can drop into new pile
-  //
-  const length = currentCardPile.length;
+function dropCards(currentPile, newPile) {
+  const length = currentPile.length;
   for (let i = 0; i < length; i++) {
-    newCardPile.push(currentCardPile.pop());
+    newPile.push(currentPile.pop());
   }
 }
 
@@ -268,7 +267,7 @@ const drawPile = cardPiles[0];
 const waste = cardPiles[1];
 
 let currentCardPile = null;
-let targetCardPile = null;
+let targetPile = null;
 let grabbedCards = [];
 
 drawPile.element.addEventListener('click', cycleDrawPile);
@@ -297,7 +296,7 @@ cards.forEach(card => {
     cardPiles.forEach(cardPile => {
       if (elementBelow.closest(`#${cardPile.name}`)) {
         currentCardPile = cardPile;
-        targetCardPile = cardPile;
+        targetPile = cardPile;
       }
     });
 
@@ -325,7 +324,7 @@ cards.forEach(card => {
 
       if (currentDroppable != droppableBelow) {
         if (currentDroppable) {
-          targetCardPile = currentCardPile;
+          targetPile = currentCardPile;
           toggleHover(currentDroppable);
         }
         currentDroppable = droppableBelow;
@@ -333,7 +332,7 @@ cards.forEach(card => {
         if (currentDroppable) {
           cardPiles.forEach(cardPile => {
             if (cardPile.name === currentDroppable.id) {
-              targetCardPile = cardPile;
+              targetPile = cardPile;
             }
           });
           toggleHover(currentDroppable);
@@ -346,15 +345,40 @@ cards.forEach(card => {
       document.removeEventListener('mousemove', onMouseMove);
       card.onmouseup = null;
 
-      //check target pile type
+      // check target pile type
+      if (targetPile.type === 'foundation') {
+        console.log('Foundation', targetPile.name);
+        if (grabbedCards.length === 1) {
+          //if pile is empty and card is an A
+          if (targetPile.cards.length < 1 && grabbedCards[0].value === 1) {
+            targetPile.suit = grabbedCards[0].suit;
+            dropCards(grabbedCards, targetPile.cards);
+            targetPile.cards[0].element.onmousedown = null;
+            console.log(targetPile.suit);
+          } else if (
+            targetPile.suit === grabbedCards[0].suit &&
+            grabbedCards[0].value ===
+              targetPile.cards[targetPile.cards.length - 1].value + 1
+          ) {
+            dropCards(grabbedCards, targetPile.cards);
+          } else {
+            targetPile = currentCardPile;
+            dropCards(grabbedCards, targetPile.cards);
+          }
+        }
+      } else if (targetPile.type === 'table') {
+        console.log('Table', targetPile.name);
+        dropCards(grabbedCards, targetPile.cards);
+      }
+
       // check if can drop in target pile
       // append card into correct pile
       // update card placement in pile
 
-      dropCards(grabbedCards, targetCardPile.cards);
-      updateZIndex(targetCardPile);
-      appendCard(targetCardPile);
-      updateCardPileVisuals(targetCardPile);
+      // dropCards(grabbedCards, targetCardPile.cards);
+      updateZIndex(targetPile);
+      appendCard(targetPile);
+      updateCardPileVisuals(targetPile);
       card.style.left = 0;
       card.style.top = 0;
 

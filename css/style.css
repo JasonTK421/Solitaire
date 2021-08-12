@@ -58,8 +58,9 @@ html {
 .card {
   background-color: #fbfbfb;
   border-radius: 0.8rem;
-  -webkit-box-shadow: inset 0px 0px 20px #9b9b9bbf;
-          box-shadow: inset 0px 0px 20px #9b9b9bbf;
+  border: 0.2rem solid #5f5f5fbf;
+  -webkit-box-shadow: inset 0px 0px 20px #b8b8b8bf;
+          box-shadow: inset 0px 0px 20px #b8b8b8bf;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
 }
