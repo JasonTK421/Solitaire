@@ -387,6 +387,9 @@ cards.forEach(card => {
       } else if (targetPile.type === 'table') {
         console.log('Table', targetPile.name);
         moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
+      } else {
+        console.log('no pile', targetPile.name);
+        moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
       }
 
       // check if can drop in target pile
