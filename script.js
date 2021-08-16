@@ -101,7 +101,11 @@ function cycleDrawPile() {
       const card = waste.cards.pop();
       drawPile.cards.push(card);
       updateZIndex(drawPile);
-      appendCards(drawPile);
+
+      drawPile.cards.forEach((card, i) => {
+        appendCard(drawPile, card, i);
+      });
+
       hideCards(drawPile);
     }
   } else {
@@ -109,7 +113,10 @@ function cycleDrawPile() {
     card.element.style.visibility = 'visible';
     waste.cards.push(card);
     updateZIndex(waste);
-    appendCards(waste);
+
+    waste.cards.forEach((card, i) => {
+      appendCard(waste, card, i);
+    });
   }
 
   if (drawPile.cards.length === 0) {
@@ -186,19 +193,17 @@ function hideCards(pile) {
   });
 }
 
-function appendCards(pile) {
-  pile.cards.forEach((card, i) => {
-    pile.element.appendChild(card.element);
-    if (!card.isFaceUp) {
-      card.element.style.visibility = 'hidden';
-      const cardBack = document.createElement('div');
-      cardBack.className = `cardBack`;
-      cardBack.draggable = false;
-      cardBack.style.zIndex = i;
-      cardBack.style.top = card.element.style.top;
-      pile.element.appendChild(cardBack);
-    }
-  });
+function appendCard(pile, card, i) {
+  pile.element.appendChild(card.element);
+  if (!card.isFaceUp) {
+    card.element.style.visibility = 'hidden';
+    const cardBack = document.createElement('div');
+    cardBack.className = `cardBack`;
+    cardBack.draggable = false;
+    cardBack.style.zIndex = i;
+    cardBack.style.top = card.element.style.top;
+    pile.element.appendChild(cardBack);
+  }
 }
 
 function pickUpCards(index, currentCardPile) {
@@ -294,7 +299,9 @@ tablePiles.forEach(pile => {
 });
 
 cardPiles.forEach(pile => {
-  appendCards(pile);
+  pile.cards.forEach((card, i) => {
+    appendCard(pile, card, i);
+  });
 });
 
 const cards = document.querySelectorAll('.card');
@@ -387,6 +394,7 @@ cards.forEach(card => {
       } else if (targetPile.type === 'table') {
         console.log('Table', targetPile.name);
         moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
+        updateTablePile(currentCardPile);
       } else {
         console.log('no pile', targetPile.name);
         moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
@@ -398,7 +406,11 @@ cards.forEach(card => {
 
       // moveCardFromOldToNewPile(grabbedCards, targetCardPile.cards);
       updateZIndex(targetPile);
-      appendCards(targetPile);
+      appendCard(
+        targetPile,
+        targetPile.cards[targetPile.cards.length - 1],
+        targetPile.cards.length - 1
+      );
       updateCardPileVisuals(targetPile);
       card.style.left = 0;
       card.style.top = 0;
