@@ -58,7 +58,7 @@ html {
 .card {
   background-color: #fbfbfb;
   border-radius: 0.8rem;
-  border: 0.2rem solid #5f5f5fbf;
+  border: 0.3rem solid #5f5f5fbf;
   -webkit-box-shadow: inset 0px 0px 20px #b8b8b8bf;
           box-shadow: inset 0px 0px 20px #b8b8b8bf;
   -webkit-backface-visibility: hidden;
@@ -131,7 +131,7 @@ html {
 .cardBack {
   background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
   background: linear-gradient(to bottom right, maroon, #b47979);
-  border: 0.3rem solid #fbfbfb;
+  border: 0.4rem solid #fbfbfb;
   z-index: 1;
 }
 

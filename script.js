@@ -101,7 +101,7 @@ function cycleDrawPile() {
       const card = waste.cards.pop();
       drawPile.cards.push(card);
       updateZIndex(drawPile);
-      appendCard(drawPile);
+      appendCards(drawPile);
       hideCards(drawPile);
     }
   } else {
@@ -109,7 +109,7 @@ function cycleDrawPile() {
     card.element.style.visibility = 'visible';
     waste.cards.push(card);
     updateZIndex(waste);
-    appendCard(waste);
+    appendCards(waste);
   }
 
   if (drawPile.cards.length === 0) {
@@ -186,17 +186,17 @@ function hideCards(pile) {
   });
 }
 
-function appendCard(pile) {
+function appendCards(pile) {
   pile.cards.forEach((card, i) => {
+    pile.element.appendChild(card.element);
     if (!card.isFaceUp) {
+      card.element.style.visibility = 'hidden';
       const cardBack = document.createElement('div');
       cardBack.className = `cardBack`;
       cardBack.draggable = false;
       cardBack.style.zIndex = i;
       cardBack.style.top = card.element.style.top;
       pile.element.appendChild(cardBack);
-    } else {
-      pile.element.appendChild(card.element);
     }
   });
 }
@@ -231,10 +231,21 @@ function toggleHover(currentDroppable) {
   }
 }
 
-function dropCards(currentPile, newPile) {
+function moveCardFromOldToNewPile(currentPile, newPile) {
   const length = currentPile.length;
   for (let i = 0; i < length; i++) {
     newPile.push(currentPile.pop());
+  }
+}
+
+function updateTablePile(currentPile) {
+  if (currentPile.cards.length === 0) return;
+
+  const topCard = currentPile.cards[currentPile.cards.length - 1];
+  if (!topCard.isFaceUp) {
+    topCard.isFaceUp = true;
+    currentPile.element.lastChild.remove();
+    topCard.element.style.visibility = 'visible';
   }
 }
 
@@ -283,7 +294,7 @@ tablePiles.forEach(pile => {
 });
 
 cardPiles.forEach(pile => {
-  appendCard(pile);
+  appendCards(pile);
 });
 
 const cards = document.querySelectorAll('.card');
@@ -352,32 +363,39 @@ cards.forEach(card => {
           //if pile is empty and card is an A
           if (targetPile.cards.length < 1 && grabbedCards[0].value === 1) {
             targetPile.suit = grabbedCards[0].suit;
-            dropCards(grabbedCards, targetPile.cards);
+            moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
             targetPile.cards[0].element.onmousedown = null;
             console.log(targetPile.suit);
+            if (currentCardPile.type === 'table') {
+              updateTablePile(currentCardPile);
+            }
           } else if (
+            // if pile is not empty and card is next card
             targetPile.suit === grabbedCards[0].suit &&
             grabbedCards[0].value ===
               targetPile.cards[targetPile.cards.length - 1].value + 1
           ) {
-            dropCards(grabbedCards, targetPile.cards);
+            moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
+            if (currentCardPile.type === 'table') {
+              updateTablePile(currentCardPile);
+            }
           } else {
             targetPile = currentCardPile;
-            dropCards(grabbedCards, targetPile.cards);
+            moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
           }
         }
       } else if (targetPile.type === 'table') {
         console.log('Table', targetPile.name);
-        dropCards(grabbedCards, targetPile.cards);
+        moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
       }
 
       // check if can drop in target pile
       // append card into correct pile
       // update card placement in pile
 
-      // dropCards(grabbedCards, targetCardPile.cards);
+      // moveCardFromOldToNewPile(grabbedCards, targetCardPile.cards);
       updateZIndex(targetPile);
-      appendCard(targetPile);
+      appendCards(targetPile);
       updateCardPileVisuals(targetPile);
       card.style.left = 0;
       card.style.top = 0;
