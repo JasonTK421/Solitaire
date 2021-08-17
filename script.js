@@ -7,6 +7,7 @@ function card(value, name, suit, cardID, isFaceUp) {
   this.cardID = cardID;
   this.element;
   this.isFaceUp = isFaceUp;
+  this.placement = 0;
 }
 
 function deck() {
@@ -194,6 +195,9 @@ function hideCards(pile) {
 }
 
 function appendCard(pile, card, i) {
+  console.log(card.placement);
+  card.element.style.top = `${card.placement}rem`;
+  console.log(card.element.style.top);
   pile.element.appendChild(card.element);
   if (!card.isFaceUp) {
     card.element.style.visibility = 'hidden';
@@ -260,6 +264,10 @@ function updateZIndex(pile) {
   });
 }
 
+function setPlacement(num) {
+  grabbedCards[0].placement = num;
+}
+
 // TODO remove when finished testing
 function testCheckAllCardPiles(cardPiles) {
   console.log(
@@ -294,7 +302,7 @@ hideCards(drawPile);
 
 tablePiles.forEach(pile => {
   pile.cards.forEach((card, i) => {
-    card.element.style.top = `${i * 1.5}rem`;
+    card.placement = i * 1.5;
   });
 });
 
@@ -366,10 +374,12 @@ cards.forEach(card => {
       // check target pile type
       if (targetPile.type === 'foundation') {
         console.log('Foundation', targetPile.name);
+        // if only holding one card
         if (grabbedCards.length === 1) {
           //if pile is empty and card is an A
           if (targetPile.cards.length < 1 && grabbedCards[0].value === 1) {
             targetPile.suit = grabbedCards[0].suit;
+            setPlacement(0);
             moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
             targetPile.cards[0].element.onmousedown = null;
             console.log(targetPile.suit);
@@ -382,6 +392,7 @@ cards.forEach(card => {
             grabbedCards[0].value ===
               targetPile.cards[targetPile.cards.length - 1].value + 1
           ) {
+            setPlacement(0);
             moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
             if (currentCardPile.type === 'table') {
               updateTablePile(currentCardPile);
@@ -390,9 +401,18 @@ cards.forEach(card => {
             targetPile = currentCardPile;
             moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
           }
+        } else {
+          console.log('too many cards');
         }
       } else if (targetPile.type === 'table') {
         console.log('Table', targetPile.name);
+        if (targetPile.cards.length > 0) {
+          setPlacement(
+            targetPile.cards[targetPile.cards.length - 1].placement + 4
+          );
+        } else {
+          setPlacement(0);
+        }
         moveCardFromOldToNewPile(grabbedCards, targetPile.cards);
         updateTablePile(currentCardPile);
       } else {
@@ -413,7 +433,7 @@ cards.forEach(card => {
       );
       updateCardPileVisuals(targetPile);
       card.style.left = 0;
-      card.style.top = 0;
+      // card.style.top = 0;
 
       if (currentDroppable) {
         toggleHover(currentDroppable);
