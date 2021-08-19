@@ -219,6 +219,17 @@ function appendCard(pile, card, i) {
   }
 }
 
+function setTargetPileHeight(pile) {
+  if (pile.cards.length > 0) {
+    const topCardPosition = pile.cards[pile.cards.length - 1].element.offsetTop;
+    const topCardHeight =
+      pile.cards[pile.cards.length - 1].element.offsetHeight;
+    pile.element.style.height = `${topCardPosition + topCardHeight}px`;
+  } else {
+    pile.element.style.height = 174;
+  }
+}
+
 function pickUpCards(index, currentCardPile) {
   const cards = [];
   for (let i = currentCardPile.length - 1; i >= index; i--) {
@@ -238,14 +249,6 @@ function updateCardPileVisuals(pile) {
   else {
     pile.element.classList.add('fullPile');
     pile.element.classList.remove('emptyPile');
-  }
-}
-
-function toggleHover(currentDroppable) {
-  if (currentDroppable.classList.contains('hover')) {
-    currentDroppable.classList.remove('hover');
-  } else {
-    currentDroppable.classList.add('hover');
   }
 }
 
@@ -270,7 +273,11 @@ function updateZIndex(pile) {
   });
 }
 
-function setPlacement(targePile, num) {
+function setOffsetOfLastCardInPile(targePile) {
+  let num = 0;
+  if (targetPile.cards.length > 1 && targetPile.type === 'table') {
+    num = targetPile.cards[targetPile.cards.length - 2].placement + 4;
+  }
   targePile.cards[targePile.cards.length - 1].placement = num;
 }
 
@@ -318,6 +325,10 @@ cardPiles.forEach(pile => {
   });
 });
 
+tablePiles.forEach(pile => {
+  setTargetPileHeight(pile);
+});
+
 const cards = document.querySelectorAll('.card');
 
 cards.forEach(card => {
@@ -332,8 +343,11 @@ cards.forEach(card => {
         targetPile = cardPile;
       }
     });
+
     grabbedCards = pickUpCards(card.style.zIndex - 101, currentCardPile.cards);
+    setTargetPileHeight(currentCardPile);
     updateCardPileVisuals(currentCardPile);
+    card.classList.add('glow');
 
     playField.append(card);
     card.style.zIndex = 1000;
@@ -357,7 +371,6 @@ cards.forEach(card => {
       if (currentDroppable != droppableBelow) {
         if (currentDroppable) {
           targetPile = currentCardPile;
-          toggleHover(currentDroppable);
         }
         currentDroppable = droppableBelow;
 
@@ -367,7 +380,6 @@ cards.forEach(card => {
               targetPile = cardPile;
             }
           });
-          toggleHover(currentDroppable);
         }
       }
     }
@@ -376,24 +388,23 @@ cards.forEach(card => {
     card.onmouseup = function () {
       document.removeEventListener('mousemove', onMouseMove);
       card.onmouseup = null;
+      card.classList.remove('glow');
 
       // check target pile type
       if (targetPile.type === 'foundation') {
-        console.log('Foundation', targetPile.name);
         // if only holding one card
         if (grabbedCards.length === 1) {
           //if pile is empty and card is an A
           if (targetPile.cards.length < 1 && grabbedCards[0].value === 1) {
             targetPile.suit = grabbedCards[0].suit;
             moveCardIntoNewPile(grabbedCards, targetPile);
-            setPlacement(targetPile, 0);
+            setOffsetOfLastCardInPile(targetPile);
             targetPile.cards[0].element.onmousedown = null;
             appendCard(
               targetPile,
               targetPile.cards[targetPile.cards.length - 1],
               targetPile.cards.length - 1
             );
-            console.log(targetPile.suit);
             if (currentCardPile.type === 'table') {
               updateTablePile(currentCardPile);
             }
@@ -404,7 +415,7 @@ cards.forEach(card => {
               targetPile.cards[targetPile.cards.length - 1].value + 1
           ) {
             moveCardIntoNewPile(grabbedCards, targetPile);
-            setPlacement(targetPile, 0);
+            setOffsetOfLastCardInPile(targetPile);
             appendCard(
               targetPile,
               targetPile.cards[targetPile.cards.length - 1],
@@ -427,22 +438,20 @@ cards.forEach(card => {
           console.log('too many cards');
         }
       } else if (targetPile.type === 'table') {
-        console.log('Table', targetPile.name);
         const topCard = targetPile.cards[targetPile.cards.length - 1];
         const grabbedCard = grabbedCards.length - 1;
         if (targetPile.cards.length === 0) {
           if (grabbedCards[grabbedCard].value === 13) {
-            console.log(`We've got a King!`, grabbedCards[0].name);
             const grabbedCardsLength = grabbedCards.length;
             for (let i = 0; i < grabbedCardsLength; i++) {
               moveCardIntoNewPile(grabbedCards, targetPile);
-              // TODO set placement of cards after king
-              setPlacement(targetPile, 0);
+              setOffsetOfLastCardInPile(targetPile);
               appendCard(
                 targetPile,
                 targetPile.cards[targetPile.cards.length - 1],
                 targetPile.cards.length - 1
               );
+              setTargetPileHeight(targetPile);
             }
           } else {
             targetPile = currentCardPile;
@@ -454,6 +463,7 @@ cards.forEach(card => {
                 targetPile.cards[targetPile.cards.length - 1],
                 targetPile.cards.length - 1
               );
+              setTargetPileHeight(targetPile);
             }
           }
         } else if (
@@ -463,15 +473,14 @@ cards.forEach(card => {
           const grabbedCardsLength = grabbedCards.length;
           for (let i = 0; i < grabbedCardsLength; i++) {
             moveCardIntoNewPile(grabbedCards, targetPile);
-            setPlacement(
-              targetPile,
-              targetPile.cards[targetPile.cards.length - 2].placement + 4
-            );
+            setOffsetOfLastCardInPile(targetPile);
             appendCard(
               targetPile,
               targetPile.cards[targetPile.cards.length - 1],
               targetPile.cards.length - 1
             );
+            setTargetPileHeight(targetPile);
+            // setTargetPileHeight(currentCardPile);
           }
         } else {
           targetPile = currentCardPile;
@@ -483,6 +492,7 @@ cards.forEach(card => {
               targetPile.cards[targetPile.cards.length - 1],
               targetPile.cards.length - 1
             );
+            setTargetPileHeight(targetPile);
           }
         }
         updateTablePile(currentCardPile);
@@ -496,8 +506,8 @@ cards.forEach(card => {
             targetPile.cards[targetPile.cards.length - 1],
             targetPile.cards.length - 1
           );
+          setTargetPileHeight(targetPile);
         }
-        console.log('no pile', targetPile.name);
       }
 
       updateZIndex(targetPile);
