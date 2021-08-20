@@ -6,9 +6,11 @@ $font-display: 'Raleway', sans-serif; // 100 200 300 400 500 600 700 800 900
 $color-primary: #354ed8;
 $color-black: #131313;
 $color-white: #fbfbfb;
-$color-shadow: #131313bf;
+$color-shadow: #000000;
 $color-inner-shadow: #b8b8b8bf;
 $color-cardface-border: #5f5f5fbf;
+$color-card-glow: #fffd93; // #11f7ff;
+$color-card-shadow: #00000069;
 
 $color-suit-red: #d30808;
 $color-suit-black: #131313;
@@ -16,4 +18,4 @@ $color-suit-black: #131313;
 $card-width: 12.4rem;
 
 // CARD PROPERTIES
-$card-corners: 0.8rem;
+$card-corners: 1rem;

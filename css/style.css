@@ -51,16 +51,14 @@ html {
 .cardBack {
   width: 12.4rem;
   height: 17.36rem;
-  border-radius: 0.8rem;
+  border-radius: 1rem;
   position: absolute;
 }
 
 .card {
   background-color: #fbfbfb;
-  border-radius: 0.8rem;
-  border: 0.3rem solid #5f5f5fbf;
-  -webkit-box-shadow: inset 0px 0px 20px #b8b8b8bf;
-          box-shadow: inset 0px 0px 20px #b8b8b8bf;
+  border-radius: 1rem;
+  border: 0.1rem solid #5f5f5fbf;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
 }
@@ -131,7 +129,7 @@ html {
 .cardBack {
   background: -webkit-gradient(linear, left top, right bottom, from(maroon), to(#b47979));
   background: linear-gradient(to bottom right, maroon, #b47979);
-  border: 0.4rem solid #fbfbfb;
+  border: 0.5rem solid #fbfbfb;
   z-index: 1;
 }
 
@@ -145,8 +143,8 @@ html {
 }
 
 .glow {
-  -webkit-box-shadow: inset 0px 0px 5px #11f7ff, 0px 0px 15px 2px #11f7ff, 22px 23px 10px rgba(0, 0, 0, 0.411);
-          box-shadow: inset 0px 0px 5px #11f7ff, 0px 0px 15px 2px #11f7ff, 22px 23px 10px rgba(0, 0, 0, 0.411);
+  -webkit-box-shadow: inset 0px 0px 5px #fffd93, 0px 0px 15px 2px #fffd93, 22px 23px 10px #00000069;
+          box-shadow: inset 0px 0px 5px #fffd93, 0px 0px 15px 2px #fffd93, 22px 23px 10px #00000069;
 }
 
 .red {
@@ -239,7 +237,7 @@ html {
 }
 
 .playfield__cardPile {
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   position: relative;
@@ -341,8 +339,8 @@ html {
 }
 
 .fullPile {
-  -webkit-box-shadow: 2px 3px 10px #131313bf;
-          box-shadow: 2px 3px 10px #131313bf;
+  -webkit-box-shadow: 2px 3px 10px #000000;
+          box-shadow: 2px 3px 10px #000000;
 }
 
 .hover {

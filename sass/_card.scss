@@ -9,8 +9,8 @@
 .card {
   background-color: $color-white;
   border-radius: $card-corners;
-  border: 0.3rem solid $color-cardface-border;
-  box-shadow: inset 0px 0px 20px $color-inner-shadow;
+  border: 0.1rem solid $color-cardface-border;
+  // box-shadow: inset 0px 0px 20px $color-inner-shadow;
   backface-visibility: hidden;
 
   &__face {
@@ -54,7 +54,7 @@
 
 .cardBack {
   background: linear-gradient(to bottom right, maroon, rgb(180, 121, 121));
-  border: 0.4rem solid $color-white;
+  border: 0.5rem solid $color-white;
   z-index: 1;
 }
 
@@ -68,8 +68,8 @@
 
 .glow {
   // border-color: forestgreen;
-  box-shadow: inset 0px 0px 5px rgb(17, 247, 255),
-    0px 0px 15px 2px rgb(17, 247, 255), 22px 23px 10px rgba(0, 0, 0, 0.411);
+  box-shadow: inset 0px 0px 5px $color-card-glow,
+    0px 0px 15px 2px $color-card-glow, 22px 23px 10px $color-card-shadow;
 }
 
 .red {
