@@ -115,7 +115,7 @@ function cycleDrawPile() {
       updateZIndex(drawPile);
 
       drawPile.cards.forEach((card, i) => {
-        appendCard(drawPile, card, i);
+        appendCardElement(drawPile, card, i);
       });
 
       hideCards(drawPile);
@@ -127,7 +127,7 @@ function cycleDrawPile() {
     updateZIndex(waste);
 
     waste.cards.forEach((card, i) => {
-      appendCard(waste, card, i);
+      appendCardElement(waste, card, i);
     });
   }
 
@@ -205,7 +205,7 @@ function hideCards(pile) {
   });
 }
 
-function appendCard(pile, card, i) {
+function appendCardElement(pile, card, i) {
   card.element.style.top = `${card.placement}rem`;
   pile.element.appendChild(card.element);
   if (!card.isFaceUp) {
@@ -219,7 +219,7 @@ function appendCard(pile, card, i) {
   }
 }
 
-function setTargetPileHeight(pile) {
+function setPileHeight(pile) {
   if (pile.cards.length > 0) {
     const topCardPosition = pile.cards[pile.cards.length - 1].element.offsetTop;
     const topCardHeight =
@@ -235,6 +235,7 @@ function pickUpCards(index, currentCardPile) {
   for (let i = currentCardPile.length - 1; i >= index; i--) {
     cards.push(currentCardPile.pop());
   }
+
   return cards;
 }
 
@@ -276,9 +277,27 @@ function updateZIndex(pile) {
 function setOffsetOfLastCardInPile(targePile) {
   let num = 0;
   if (targetPile.cards.length > 1 && targetPile.type === 'table') {
-    num = targetPile.cards[targetPile.cards.length - 2].placement + 4;
+    if (targetPile.cards[targetPile.cards.length - 2].isFaceUp) {
+      num = targetPile.cards[targetPile.cards.length - 2].placement + 4;
+    } else {
+      num = targetPile.cards[targetPile.cards.length - 2].placement + 1.5;
+    }
   }
   targePile.cards[targePile.cards.length - 1].placement = num;
+}
+
+function BigFunction() {
+  const grabbedCardsLength = grabbedCards.length;
+  for (let i = 0; i < grabbedCardsLength; i++) {
+    moveCardIntoNewPile(grabbedCards, targetPile);
+    setOffsetOfLastCardInPile(targetPile);
+    appendCardElement(
+      targetPile,
+      targetPile.cards[targetPile.cards.length - 1],
+      targetPile.cards.length - 1
+    );
+    setPileHeight(targetPile);
+  }
 }
 
 // TODO remove when finished testing
@@ -321,12 +340,12 @@ tablePiles.forEach(pile => {
 
 cardPiles.forEach(pile => {
   pile.cards.forEach((card, i) => {
-    appendCard(pile, card, i);
+    appendCardElement(pile, card, i);
   });
 });
 
 tablePiles.forEach(pile => {
-  setTargetPileHeight(pile);
+  setPileHeight(pile);
 });
 
 const cards = document.querySelectorAll('.card');
@@ -345,7 +364,10 @@ cards.forEach(card => {
     });
 
     grabbedCards = pickUpCards(card.style.zIndex - 101, currentCardPile.cards);
-    setTargetPileHeight(currentCardPile);
+    // grabbedCards.forEach(card => {
+    //   grabbedCards[0].element.appendChild(card.element);
+    // });
+    setPileHeight(currentCardPile);
     updateCardPileVisuals(currentCardPile);
     card.classList.add('glow');
 
@@ -400,7 +422,7 @@ cards.forEach(card => {
             moveCardIntoNewPile(grabbedCards, targetPile);
             setOffsetOfLastCardInPile(targetPile);
             targetPile.cards[0].element.onmousedown = null;
-            appendCard(
+            appendCardElement(
               targetPile,
               targetPile.cards[targetPile.cards.length - 1],
               targetPile.cards.length - 1
@@ -416,7 +438,7 @@ cards.forEach(card => {
           ) {
             moveCardIntoNewPile(grabbedCards, targetPile);
             setOffsetOfLastCardInPile(targetPile);
-            appendCard(
+            appendCardElement(
               targetPile,
               targetPile.cards[targetPile.cards.length - 1],
               targetPile.cards.length - 1
@@ -427,7 +449,7 @@ cards.forEach(card => {
           } else {
             targetPile = currentCardPile;
             moveCardIntoNewPile(grabbedCards, targetPile);
-            appendCard(
+            appendCardElement(
               targetPile,
               targetPile.cards[targetPile.cards.length - 1],
               targetPile.cards.length - 1
@@ -442,82 +464,30 @@ cards.forEach(card => {
         const grabbedCard = grabbedCards.length - 1;
         if (targetPile.cards.length === 0) {
           if (grabbedCards[grabbedCard].value === 13) {
-            const grabbedCardsLength = grabbedCards.length;
-            for (let i = 0; i < grabbedCardsLength; i++) {
-              moveCardIntoNewPile(grabbedCards, targetPile);
-              setOffsetOfLastCardInPile(targetPile);
-              appendCard(
-                targetPile,
-                targetPile.cards[targetPile.cards.length - 1],
-                targetPile.cards.length - 1
-              );
-              setTargetPileHeight(targetPile);
-            }
+            BigFunction();
           } else {
             targetPile = currentCardPile;
-            const grabbedCardsLength = grabbedCards.length;
-            for (let i = 0; i < grabbedCardsLength; i++) {
-              moveCardIntoNewPile(grabbedCards, targetPile);
-              appendCard(
-                targetPile,
-                targetPile.cards[targetPile.cards.length - 1],
-                targetPile.cards.length - 1
-              );
-              setTargetPileHeight(targetPile);
-            }
+            BigFunction();
           }
         } else if (
           topCard.color !== grabbedCards[grabbedCard].color &&
           topCard.value === grabbedCards[grabbedCard].value + 1
         ) {
-          const grabbedCardsLength = grabbedCards.length;
-          for (let i = 0; i < grabbedCardsLength; i++) {
-            moveCardIntoNewPile(grabbedCards, targetPile);
-            setOffsetOfLastCardInPile(targetPile);
-            appendCard(
-              targetPile,
-              targetPile.cards[targetPile.cards.length - 1],
-              targetPile.cards.length - 1
-            );
-            setTargetPileHeight(targetPile);
-            // setTargetPileHeight(currentCardPile);
-          }
+          BigFunction();
         } else {
           targetPile = currentCardPile;
-          const grabbedCardsLength = grabbedCards.length;
-          for (let i = 0; i < grabbedCardsLength; i++) {
-            moveCardIntoNewPile(grabbedCards, targetPile);
-            appendCard(
-              targetPile,
-              targetPile.cards[targetPile.cards.length - 1],
-              targetPile.cards.length - 1
-            );
-            setTargetPileHeight(targetPile);
-          }
+          BigFunction();
         }
         updateTablePile(currentCardPile);
       } else {
         targetPile = currentCardPile;
-        const grabbedCardsLength = grabbedCards.length;
-        for (let i = 0; i < grabbedCardsLength; i++) {
-          moveCardIntoNewPile(grabbedCards, targetPile);
-          appendCard(
-            targetPile,
-            targetPile.cards[targetPile.cards.length - 1],
-            targetPile.cards.length - 1
-          );
-          setTargetPileHeight(targetPile);
-        }
+        BigFunction();
       }
 
       updateZIndex(targetPile);
       updateCardPileVisuals(targetPile);
       card.style.left = 0;
-      // card.style.top = 0;
 
-      if (currentDroppable) {
-        toggleHover(currentDroppable);
-      }
       // testCheckAllCardPiles(cardPiles);
     };
   };
